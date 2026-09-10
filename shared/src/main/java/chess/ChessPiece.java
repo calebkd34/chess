@@ -1,8 +1,6 @@
 package chess;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Represents a single chess piece
@@ -69,5 +67,23 @@ public class ChessPiece {
     @Override
     public int hashCode() {
         return Objects.hash(pieceColor, type);
+    }
+
+    @Override
+    public String toString() {
+        Map<ChessPiece, String> simplePieces = new HashMap<>();
+        simplePieces.put(new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.KING), "K");
+        simplePieces.put(new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.QUEEN), "Q");
+        simplePieces.put(new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.KNIGHT), "N");
+        simplePieces.put(new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.BISHOP), "B");
+        simplePieces.put(new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.ROOK), "R");
+        simplePieces.put(new ChessPiece(ChessGame.TeamColor.WHITE,ChessPiece.PieceType.PAWN), "P");
+        simplePieces.put(new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.KING), "k");
+        simplePieces.put(new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.QUEEN), "q");
+        simplePieces.put(new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.KNIGHT), "n");
+        simplePieces.put(new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.BISHOP), "b");
+        simplePieces.put(new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.ROOK), "r");
+        simplePieces.put(new ChessPiece(ChessGame.TeamColor.BLACK,ChessPiece.PieceType.PAWN), "p");
+    return simplePieces.get(this);
     }
 }

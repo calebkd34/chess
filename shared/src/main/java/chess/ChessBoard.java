@@ -43,7 +43,7 @@ public class ChessBoard {
      */
     public void resetBoard() {
         // white pieces
-        for (int i = 1; i < 8; i++) { // pawns
+        for (int i = 1; i <= 8; i++) { // pawns
             addPiece(new ChessPosition(2, i), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
         }
         // not pawns
@@ -57,7 +57,7 @@ public class ChessBoard {
         addPiece(new ChessPosition(1, 8), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
 
         // black pieces
-        for (int i = 1; i < 8; i++) { // pawns
+        for (int i = 1; i <= 8; i++) { // pawns
             addPiece(new ChessPosition(7, i), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
         }
 
@@ -85,5 +85,29 @@ public class ChessBoard {
     @Override
     public int hashCode() {
         return Arrays.deepHashCode(squares);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder board = new StringBuilder();
+
+        // build the whole board
+        for (int y = 0; y < 8; y++) {
+            board.append("|");
+            for (int x = 0; x < 8; x++) {
+
+                // add the letter if it is a piece
+                if (squares[x][y] == null) {
+                    board.append(' ');
+                }
+                else { // blank if null
+                    board.append(squares[x][y]);
+                }
+                board.append("|");
+            }
+            board.append("\n");
+        }
+
+        return board.toString();
     }
 }
