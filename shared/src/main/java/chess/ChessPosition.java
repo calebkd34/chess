@@ -47,7 +47,7 @@ public class ChessPosition {
             return String.format("%s%s", letters[col - 1], row);
         }
         else {
-            return String.format("%s,%S", col, row);
+            return String.format("%s,%s", col, row);
         }
     }
 
