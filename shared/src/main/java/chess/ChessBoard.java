@@ -34,6 +34,9 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
+
+        // assert position is not out of bounds
+        assert position.isValid(): "Piece is not on the board";
         return squares[position.getRow() - 1][position.getColumn() - 1];
     }
 
