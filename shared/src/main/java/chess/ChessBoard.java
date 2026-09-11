@@ -95,22 +95,22 @@ public class ChessBoard {
         StringBuilder board = new StringBuilder();
 
         // build the whole board
-        for (int y = 0; y < 8; y++) {
-            board.append("|");
-            for (int x = 0; x < 8; x++) {
+        for (int row = 7; row >= 0; row--) {
+            board.append('|');
+            for (int col = 0; col < 8; col++) {
 
-                // add the letter if it is a piece
-                if (squares[x][y] == null) {
+                // blank if null
+                if (squares[row][col] == null) {
                     board.append(' ');
                 }
-                else { // blank if null
-                    board.append(squares[x][y]);
-                }
-                board.append("|");
-            }
-            board.append("\n");
-        }
 
+                else { // add the letter if it is a piece
+                    board.append(squares[row][col]);
+                }
+                board.append('|');
+            }
+            board.append('\n');
+        }
         return board.toString();
     }
 }

@@ -21,7 +21,7 @@ public class ChessPosition {
      * @return if the position is on the chess board
      */
     public boolean isValid() {
-        return row <= 8 && col <= 8;
+        return row <= 8 && row > 0 && col <= 8 && col > 0;
     }
 
     /**
@@ -42,8 +42,13 @@ public class ChessPosition {
 
     @Override
     public String toString() {
-        char[] letters = "abcdefgh".toCharArray();
-        return String.format("%s%s", letters[col], row);
+        if (isValid()) {
+            char[] letters = "abcdefgh".toCharArray();
+            return String.format("%s%s", letters[col - 1], row);
+        }
+        else {
+            return String.format("%s,%S", col, row);
+        }
     }
 
     @Override

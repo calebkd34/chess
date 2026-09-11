@@ -38,9 +38,10 @@ public class KnightMoveCalculator {
 
         // check each position
         Collection<ChessMove> validMoves = new ArrayList<>();
-        for (ChessPosition position : possibleMoves ) {
-            if (position.isValid()) { // off the board
-                if (board.getPiece(position) == null || board.getPiece(position).getTeamColor() == team) {
+        for (ChessPosition position : possibleMoves) {
+            if (position.isValid()) { // don't add off the board
+                // TODO: make sure position.isValid actually works, test cases imply are trying to go off board
+                if (board.getPiece(position) == null || board.getPiece(position).getTeamColor() != team) {
                     validMoves.add(new ChessMove(startPosition, position, null));
                 }
             }
