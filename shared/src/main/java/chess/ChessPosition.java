@@ -17,6 +17,12 @@ public class ChessPosition {
         this.row = row;
         this.col = col;
     }
+    /**
+     * @return if the position is on the chess board
+     */
+    public boolean isValid() {
+        return row <= 8 && col <= 8;
+    }
 
     /**
      * @return which row this position is in
