@@ -43,7 +43,7 @@ public class ChessPosition {
     @Override
     public String toString() {
         char[] letters = "abcdefgh".toCharArray();
-        return String.format("%s%s", row, letters[col]);
+        return String.format("%s%s", letters[col], row);
     }
 
     @Override

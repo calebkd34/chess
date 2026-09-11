@@ -52,7 +52,11 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return List.of();
+
+        if (type == PieceType.KNIGHT) {
+            return KnightMoveCalculator.calculateMoves(board, myPosition);
+        }
+        return null;
     }
 
     @Override
