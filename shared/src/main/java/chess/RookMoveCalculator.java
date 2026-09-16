@@ -10,7 +10,7 @@ public class RookMoveCalculator {
         // get the rook information
         ChessPiece rook = board.getPiece(startPosition);
 
-        // make sure it is a rook or a queen
+        // make sure it is a rook
         assert rook.getPieceType() == ChessPiece.PieceType.ROOK: "Not a rook";
 
         // get the team color
@@ -20,16 +20,16 @@ public class RookMoveCalculator {
         Collection<ChessMove> validMoves = new ArrayList<>();
 
         // check to the north
-        SlideMoveCalculator.calculateMoves(board, startPosition, teamColor, validMoves, 1,0);
+        SlideMoveCalculator.calculateMoves(board, startPosition, teamColor, validMoves, 1, 0);
 
         // check to the south
-        SlideMoveCalculator.calculateMoves(board, startPosition, teamColor, validMoves, -1,0);
+        SlideMoveCalculator.calculateMoves(board, startPosition, teamColor, validMoves, -1, 0);
 
         // check to the east
-        SlideMoveCalculator.calculateMoves(board, startPosition, teamColor, validMoves, 0,1);
+        SlideMoveCalculator.calculateMoves(board, startPosition, teamColor, validMoves, 0, 1);
 
         // check to the west
-        SlideMoveCalculator.calculateMoves(board, startPosition, teamColor, validMoves, 0,-1);
+        SlideMoveCalculator.calculateMoves(board, startPosition, teamColor, validMoves, 0, -1);
 
         return validMoves;
     }

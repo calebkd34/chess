@@ -53,15 +53,14 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
 
-        if (type == PieceType.KNIGHT) {
-            return KnightMoveCalculator.calculateMoves(board, myPosition);
-        }
-        if (type == PieceType.KING) {
-            return KingMoveCalculator.calculateMoves(board, myPosition);
-        }
-        if (type == PieceType.ROOK) {
-            return RookMoveCalculator.calculateMoves(board, myPosition);
-        }
+        if (type == PieceType.KNIGHT) return KnightMoveCalculator.calculateMoves(board, myPosition);
+
+        if (type == PieceType.KING) return KingMoveCalculator.calculateMoves(board, myPosition);
+
+        if (type == PieceType.ROOK) return RookMoveCalculator.calculateMoves(board, myPosition);
+
+        if (type == PieceType.BISHOP) return BishopMoveCalculator.calculateMoves(board, myPosition);
+
         return null;
     }
 
