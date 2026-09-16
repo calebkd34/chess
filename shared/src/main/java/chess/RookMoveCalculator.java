@@ -11,7 +11,7 @@ public class RookMoveCalculator {
         ChessPiece rook = board.getPiece(startPosition);
 
         // make sure it is a rook
-        assert rook.getPieceType() == ChessPiece.PieceType.ROOK: "Not a rook";
+        assert rook.getPieceType() == ChessPiece.PieceType.ROOK: "Not a ROOK";
 
         // get the team color
         ChessGame.TeamColor teamColor = rook.getTeamColor();

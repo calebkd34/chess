@@ -14,7 +14,7 @@ public class KingMoveCalculator {
         ChessPiece king = board.getPiece(startPosition);
 
         // make sure it is actually a king
-        assert king.getPieceType() == ChessPiece.PieceType.KING: "Not a king!";
+        assert king.getPieceType() == ChessPiece.PieceType.KING: "Not a KING!";
 
         // get the team color
         ChessGame.TeamColor teamColor = king.getTeamColor();

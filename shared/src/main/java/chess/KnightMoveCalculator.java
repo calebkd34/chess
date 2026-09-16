@@ -14,7 +14,7 @@ public class KnightMoveCalculator {
         ChessPiece knight = board.getPiece(startPosition);
 
         // make sure it is actually a knight there
-        assert knight.getPieceType() == ChessPiece.PieceType.KNIGHT: "Not a knight";
+        assert knight.getPieceType() == ChessPiece.PieceType.KNIGHT: "Not a KNIGHT";
 
         // get the team color
         ChessGame.TeamColor teamColor = knight.getTeamColor();
