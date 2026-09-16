@@ -18,16 +18,133 @@ public class PawnMoveCalculator {
 
         // prepare the valid moves
         Collection<ChessMove> validMoves = new ArrayList<>();
+        ChessPosition testPosition;
 
         // black pawns and white pawns are different
+        // note: we should not have to check if the new position is valid because a pawn can't start a turn at the edge
         if (teamColor == ChessGame.TeamColor.WHITE) {
 
-            if (startPosition.getRow() == 2) { // pawn is at the start, so can move two
+            // check the space(s) immediately ahead
+            testPosition = new ChessPosition(startPosition.getRow() + 1, startPosition.getColumn());
+            if (testPosition.isValid() && board.getPiece(testPosition) == null) { // empty space
 
+                if (testPosition.getRow() < 8) { // not the end of the board
+                    validMoves.add(new ChessMove(startPosition, testPosition, null));
+                }
+                else { // reached the end of the board
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.BISHOP));
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.KNIGHT));
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.QUEEN));
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.ROOK));
+                }
+
+                // starting piece can move two forward
+                if (startPosition.getRow() == 2) {
+                    testPosition = new ChessPosition(startPosition.getRow() + 2, startPosition.getColumn());
+                    if (board.getPiece(testPosition) == null) { // empty space
+                        validMoves.add(new ChessMove(startPosition, testPosition, null));
+                    }
+                }
             }
 
+            // check the left capture space
+            testPosition = new ChessPosition(startPosition.getRow() + 1, startPosition.getColumn() - 1);
+            if (
+                    testPosition.isValid() &&
+                    board.getPiece(testPosition) != null &&
+                    board.getPiece(testPosition).getTeamColor() != teamColor) {
+
+                if (testPosition.getRow() < 8) { // not the end
+                    validMoves.add(new ChessMove(startPosition, testPosition, null));
+                }
+                else {
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.BISHOP));
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.KNIGHT));
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.QUEEN));
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.ROOK));
+                }
+            }
+
+            // check the right capture space
+            testPosition = new ChessPosition(startPosition.getRow() + 1, startPosition.getColumn() + 1);
+            if (
+                    testPosition.isValid() &&
+                    board.getPiece(testPosition) != null &&
+                    board.getPiece(testPosition).getTeamColor() != teamColor) {
+
+                if (testPosition.getRow() < 8) { // not the end
+                    validMoves.add(new ChessMove(startPosition, testPosition, null));
+                }
+                else {
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.BISHOP));
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.KNIGHT));
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.QUEEN));
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.ROOK));
+                }
+            }
         }
 
+        if (teamColor == ChessGame.TeamColor.BLACK) {
+
+            // check the space(s) immediately ahead
+            testPosition = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn());
+            if (testPosition.isValid() && board.getPiece(testPosition) == null) { // empty space
+
+                if (testPosition.getRow() > 1) { // not the end of the board
+                    validMoves.add(new ChessMove(startPosition, testPosition, null));
+                }
+                else { // reached the end of the board
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.BISHOP));
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.KNIGHT));
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.QUEEN));
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.ROOK));
+                }
+
+                // starting piece can move two forward
+                if (startPosition.getRow() == 7) {
+                    testPosition = new ChessPosition(startPosition.getRow() - 2, startPosition.getColumn());
+                    if (board.getPiece(testPosition) == null) { // empty space
+                        validMoves.add(new ChessMove(startPosition, testPosition, null));
+                    }
+                }
+            }
+
+            // check the left capture space
+            testPosition = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn() - 1);
+            if (
+                    testPosition.isValid() &&
+                    board.getPiece(testPosition) != null &&
+                    board.getPiece(testPosition).getTeamColor() != teamColor) {
+
+                if (testPosition.getRow() > 1) { // not the end
+                    validMoves.add(new ChessMove(startPosition, testPosition, null));
+                }
+                else {
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.BISHOP));
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.KNIGHT));
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.QUEEN));
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.ROOK));
+                }
+            }
+
+            // check the right capture space
+            testPosition = new ChessPosition(startPosition.getRow() - 1, startPosition.getColumn() + 1);
+            if (
+                    testPosition.isValid() &&
+                    board.getPiece(testPosition) != null &&
+                    board.getPiece(testPosition).getTeamColor() != teamColor) {
+
+                if (testPosition.getRow() > 1) { // not the end
+                    validMoves.add(new ChessMove(startPosition, testPosition, null));
+                }
+                else {
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.BISHOP));
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.KNIGHT));
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.QUEEN));
+                    validMoves.add(new ChessMove(startPosition, testPosition, ChessPiece.PieceType.ROOK));
+                }
+            }
+        }
 
         return validMoves;
     }

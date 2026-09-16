@@ -48,6 +48,6 @@ public class ChessMove {
         if (promotionPiece == null) {
             return String.format("[%s>%s]", startPosition, endPosition);
         }
-        return String.format("[%s -> %s, ^%s]",startPosition, endPosition, promotionPiece);
+        return String.format("[%s>%s,^%s]",startPosition, endPosition, promotionPiece);
     }
 }
