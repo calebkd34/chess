@@ -53,19 +53,16 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
 
-        if (type == PieceType.KNIGHT) return KnightMoveCalculator.calculateMoves(board, myPosition);
+        return switch (type) {
+            case PieceType.KNIGHT -> KnightMoveCalculator.calculateMoves(board, myPosition);
+            case PieceType.KING -> KingMoveCalculator.calculateMoves(board, myPosition);
+            case PieceType.ROOK -> RookMoveCalculator.calculateMoves(board, myPosition);
+            case PieceType.BISHOP -> BishopMoveCalculator.calculateMoves(board, myPosition);
+            case PieceType.QUEEN -> QueenMoveCalculator.calculateMoves(board, myPosition);
+            case PieceType.PAWN -> PawnMoveCalculator.calculateMoves(board, myPosition);
+        };
 
-        if (type == PieceType.KING) return KingMoveCalculator.calculateMoves(board, myPosition);
 
-        if (type == PieceType.ROOK) return RookMoveCalculator.calculateMoves(board, myPosition);
-
-        if (type == PieceType.BISHOP) return BishopMoveCalculator.calculateMoves(board, myPosition);
-
-        if (type == PieceType.QUEEN) return QueenMoveCalculator.calculateMoves(board, myPosition);
-
-        if (type == PieceType.PAWN) return PawnMoveCalculator.calculateMoves(board, myPosition);
-
-        return null;
     }
 
     @Override

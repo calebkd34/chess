@@ -14,22 +14,16 @@ public class BishopMoveCalculator {
         assert bishop.getPieceType() == ChessPiece.PieceType.BISHOP: "Not a BISHOP";
 
         // get the team color
-        ChessGame.TeamColor teamColor = bishop.getTeamColor();
+        ChessGame.TeamColor team = bishop.getTeamColor();
 
         // prepare valid moves
         Collection<ChessMove> validMoves = new ArrayList<>();
 
-        // check the northeast
-        SlideMoveCalculator.calculateMoves(board, startPosition, teamColor, validMoves, 1, 1);
-
-        // check the southeast
-        SlideMoveCalculator.calculateMoves(board, startPosition, teamColor, validMoves, -1, 1);
-
-        // check the southwest
-        SlideMoveCalculator.calculateMoves(board, startPosition, teamColor, validMoves, -1, -1);
-
-        // check the northwest
-        SlideMoveCalculator.calculateMoves(board, startPosition, teamColor, validMoves, 1, -1);
+        // check all the directions
+        MoveHelper.slideMoves(board, startPosition, team, validMoves, 1, 1);
+        MoveHelper.slideMoves(board, startPosition, team, validMoves, -1, 1);
+        MoveHelper.slideMoves(board, startPosition, team, validMoves, -1, -1);
+        MoveHelper.slideMoves(board, startPosition, team, validMoves, 1, -1);
 
         return validMoves;
     }
