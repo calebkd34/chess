@@ -58,7 +58,42 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+
+        // get possible moves from the piece
+        ChessPiece startPiece = board.getPiece(startPosition);
+        Collection<ChessMove> possibleMoves = startPiece.pieceMoves(board, startPosition);
+
+        // remove any moves that self-check
+        possibleMoves.removeIf(move -> !checkMove(move));
+        return possibleMoves;
+    }
+
+    /**
+     * Checks to see if the move results in self-checking or checkmating
+     *
+     * @param testMove the move to see if is valid
+     * @return True if the move can be made, else false
+     */
+    public boolean checkMove(ChessMove testMove) {
+        // make sure the move doesn't go off the board
+        if (MoveHelper.check(board, testMove.getEndPosition(), teamTurn)) {
+
+            // make a game copy to test the end state on
+            ChessGame gameCopy = new ChessGame(this);
+
+            // make the move on the copy
+            if (testMove.getPromotionPiece() == null) {
+                gameCopy.board.addPiece(testMove.getEndPosition(), gameCopy.board.getPiece(testMove.getStartPosition()));
+            } else {
+                gameCopy.board.addPiece(testMove.getEndPosition(), new ChessPiece(teamTurn, testMove.getPromotionPiece()));
+            }
+            // remove the original piece
+            gameCopy.board.addPiece(testMove.getStartPosition(), null);
+
+            // if the gameCopy is in check, then the testMove is not valid
+            return gameCopy.isInCheck(teamTurn);
+
+        } else return false;
     }
 
     /**
@@ -69,10 +104,7 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         // checks if the move is valid
-        if (move.getStartPosition().isValid() && move.getEndPosition().isValid()) {
-            // TODO: I need to make a copy of the board and see if it has the current player in check or checkmate.
-            // TODO: make sure the board copy constructor and game copy constructor is working
-        } else throw new InvalidMoveException("Move is not valid.");
+        throw new InvalidMoveException("Move is not valid.");
     }
 
     /**
