@@ -18,7 +18,6 @@ public class ChessGame {
     public ChessGame() {
         teamTurn = TeamColor.WHITE;
         board = new ChessBoard();
-        board.resetBoard();
     }
 
     public ChessGame(ChessGame game) {
@@ -61,11 +60,14 @@ public class ChessGame {
 
         // get possible moves from the piece
         ChessPiece startPiece = board.getPiece(startPosition);
-        Collection<ChessMove> possibleMoves = startPiece.pieceMoves(board, startPosition);
+        if (startPiece != null) {
+            Collection<ChessMove> possibleMoves = startPiece.pieceMoves(board, startPosition);
 
-        // remove any moves that self-check
-        possibleMoves.removeIf(move -> !checkMove(move));
-        return possibleMoves;
+            // remove any moves that self-check
+            possibleMoves.removeIf(move -> !checkMove(move));
+            return possibleMoves;
+        }
+        else return new ArrayList<>();
     }
 
     /**
@@ -75,6 +77,7 @@ public class ChessGame {
      * @return True if the move can be made, else false
      */
     public boolean checkMove(ChessMove testMove) {
+
         // make sure the move doesn't go off the board
         if (MoveHelper.check(board, testMove.getEndPosition(), teamTurn)) {
 
@@ -91,7 +94,7 @@ public class ChessGame {
             gameCopy.board.addPiece(testMove.getStartPosition(), null);
 
             // if the gameCopy is in check, then the testMove is not valid
-            return gameCopy.isInCheck(teamTurn);
+            return !gameCopy.isInCheck(teamTurn);
 
         } else return false;
     }
@@ -114,11 +117,9 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        // I should go through each of the squares, check the valid moves of the opponent's piece,
-        // then check to see if the current piece is visible
 
         // initialize variables
-        ArrayList<Collection<ChessMove>> enemyMoves = new ArrayList<Collection<ChessMove>>();
+        ArrayList<Collection<ChessMove>> enemyMoves = new ArrayList<>();
         ChessPosition kingPosition = null;
         ChessPosition testPosition;
         ChessPiece piece;
@@ -126,11 +127,14 @@ public class ChessGame {
         int j;
 
         // get piece information
-        for (i = 1; i < 9; i++); {
-            for (j = 1; j < 9; j++); {
-                // square information
+        for (i = 1; i < 9; i++) {
+            for (j = 1; j < 9; j++) {
+                // position information
                 testPosition = new ChessPosition(i, j);
                 piece = board.getPiece(testPosition);
+
+                // don't look at null pieces
+                if (piece == null) continue;
 
                 // check for the friendly king
                 if (piece.getTeamColor() == teamColor && piece.getPieceType() == ChessPiece.PieceType.KING) {
@@ -148,7 +152,9 @@ public class ChessGame {
         // check enemy possible moves
         for (Collection<ChessMove> moves : enemyMoves) {
             for (ChessMove move : moves) {
-                if (move.getEndPosition() == kingPosition) return true;
+                if (move.getEndPosition().equals(kingPosition)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -181,7 +187,7 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-
+        this.board = board;
     }
 
     /**
@@ -190,7 +196,7 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        throw new RuntimeException("Not implemented");
+        return board;
     }
 
     @Override
