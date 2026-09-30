@@ -59,16 +59,18 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
 
-        // get possible moves from the piece
+        // initialize variables
+        Collection<ChessMove> possibleMoves = new ArrayList<>();
         ChessPiece startPiece = board.getPiece(startPosition);
+
+        // get possible moves from the piece
         if (startPiece != null) {
-            Collection<ChessMove> possibleMoves = startPiece.pieceMoves(board, startPosition);
+            possibleMoves = startPiece.pieceMoves(board, startPosition);
 
             // remove any moves that self-check
             possibleMoves.removeIf(move -> !checkMove(move));
             return possibleMoves;
-        }
-        else return new ArrayList<>();
+        } else return possibleMoves;
     }
 
     /**
@@ -91,7 +93,7 @@ public class ChessGame {
                 gameCopy.makeUnsafeMove(testMove);
 
                 // if the gameCopy is in check, then the testMove is not valid
-                return !gameCopy.isInCheck(teamTurn);
+                return !gameCopy.isInCheck(board.getPiece(testMove.getStartPosition()).getTeamColor());
             } else return false;
         } else return false;
     }
