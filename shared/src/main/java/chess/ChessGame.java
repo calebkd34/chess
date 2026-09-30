@@ -79,18 +79,20 @@ public class ChessGame {
      */
     public boolean checkMove(ChessMove testMove) {
 
-        // make sure the move doesn't go off the board
-        if (MoveHelper.check(board, testMove.getEndPosition(), teamTurn)) {
+        // make sure the move involves pieces
+        if (testMove != null && board.getPiece(testMove.getStartPosition()) != null) {
+            // make sure the move iss on the board
+            if (MoveHelper.check(board, testMove.getEndPosition(), teamTurn)) {
 
-            // make a game copy to test the end state on
-            ChessGame gameCopy = new ChessGame(this);
+                // make a game copy to test the end state on
+                ChessGame gameCopy = new ChessGame(this);
 
-            // make the move unsafely in the game copy
-            gameCopy.makeUnsafeMove(testMove);
+                // make the move unsafely in the game copy
+                gameCopy.makeUnsafeMove(testMove);
 
-            // if the gameCopy is in check, then the testMove is not valid
-            return !gameCopy.isInCheck(teamTurn);
-
+                // if the gameCopy is in check, then the testMove is not valid
+                return !gameCopy.isInCheck(teamTurn);
+            } else return false;
         } else return false;
     }
 
@@ -101,10 +103,23 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        // checks if the move is valid
-        if (checkMove(move)) {
-            makeUnsafeMove(move);
-        } else throw new InvalidMoveException("Invalid move");
+
+        // check if the piece is there and is the right color and is on the board
+        if (checkMove(move) && board.getPiece(move.getStartPosition()).getTeamColor() == teamTurn) {
+            // go through each of the allowed moves from the start position
+            for (ChessMove testMove : validMoves(move.getStartPosition())) {
+                // check to see if the move is in the allowed moves
+                if (move.equals(testMove)) {
+                    makeUnsafeMove(move);
+                    switch(teamTurn){ // make sure to change the turn
+                        case WHITE -> setTeamTurn(TeamColor.BLACK);
+                        case BLACK -> setTeamTurn(TeamColor.WHITE);
+                    }
+                    return;
+                }
+            }
+        }
+        throw new InvalidMoveException("Invalid move");
     }
 
     /**
