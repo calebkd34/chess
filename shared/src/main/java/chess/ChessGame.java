@@ -18,6 +18,7 @@ public class ChessGame {
     public ChessGame() {
         teamTurn = TeamColor.WHITE;
         board = new ChessBoard();
+        board.resetBoard();
     }
 
     public ChessGame(ChessGame game) {
@@ -101,7 +102,9 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         // checks if the move is valid
-        throw new InvalidMoveException("Move is not valid.");
+        if (checkMove(move)) {
+            makeUnsafeMove(move);
+        } else throw new InvalidMoveException("Invalid move");
     }
 
     /**
