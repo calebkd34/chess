@@ -21,15 +21,15 @@ public class ChessGame {
     }
 
     public ChessGame(ChessGame game) {
-        teamTurn = game.teamTurn;
-        board = game.board;
+        teamTurn = game.getTeamTurn();
+        board = new ChessBoard(game.getBoard());
     }
 
     /**
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+        return teamTurn;
     }
 
     /**
@@ -181,7 +181,6 @@ public class ChessGame {
         // just need to run isInCheck for the current King position and each king move
 
         // initialize variables
-        ArrayList<Collection<ChessMove>> friendlyMoves = null;
         ChessPosition testPosition;
         ChessGame gameCopy;
         ChessPiece piece;
@@ -204,11 +203,7 @@ public class ChessGame {
                     for (ChessMove move: piece.pieceMoves(board, testPosition)) {
                         gameCopy = new ChessGame(this);
                         gameCopy.makeUnsafeMove(move);
-                        System.out.println("checking %s".formatted(move));
-                        if (!gameCopy.isInCheck(teamColor)) {
-                            System.out.println("%s lets you escape check".formatted(move));
-                            return false;
-                        }
+                        if (!gameCopy.isInCheck(teamColor)) return false;
                     }
                 }
             }
@@ -224,7 +219,36 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+
+        // initialize variables
+        ChessPosition testPosition;
+        ChessGame gameCopy;
+        ChessPiece piece;
+        int i;
+        int j;
+        // check if currently in check
+        if (isInCheck(teamColor)) return false;
+
+        // get the king's moves
+        for (i = 1; i < 9; i++) {
+            for (j = 1; j < 9; j++) {
+                // position information
+                testPosition = new ChessPosition(i, j);
+                piece = board.getPiece(testPosition);
+
+                // don't look at null pieces
+                if (piece != null && piece.getTeamColor() == teamColor) {
+
+                    // check each of these pieces moves
+                    for (ChessMove move: piece.pieceMoves(board, testPosition)) {
+                        gameCopy = new ChessGame(this);
+                        gameCopy.makeUnsafeMove(move);
+                        if (!gameCopy.isInCheck(teamColor)) return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     /**

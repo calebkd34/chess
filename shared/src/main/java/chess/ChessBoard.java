@@ -110,16 +110,14 @@ public class ChessBoard {
             for (int col = 0; col < 8; col++) {
 
                 // blank if null
-                if (squares[row][col] == null) {
-                    board.append(' ');
-                }
+                if (squares[row][col] == null) board.append(' ');
 
-                else { // add the letter if it is a piece
-                    board.append(squares[row][col]);
-                }
+                // add the letter if it is a piece
+                else board.append(squares[row][col]);
+
                 board.append('|');
             }
-            board.append('\n');
+            board.append("    |a|b|c|d|e|f|g|h|   %s\n".formatted(row + 1));
         }
         return board.toString();
     }
