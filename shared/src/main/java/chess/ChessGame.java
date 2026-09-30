@@ -84,14 +84,8 @@ public class ChessGame {
             // make a game copy to test the end state on
             ChessGame gameCopy = new ChessGame(this);
 
-            // make the move on the copy
-            if (testMove.getPromotionPiece() == null) {
-                gameCopy.board.addPiece(testMove.getEndPosition(), gameCopy.board.getPiece(testMove.getStartPosition()));
-            } else {
-                gameCopy.board.addPiece(testMove.getEndPosition(), new ChessPiece(teamTurn, testMove.getPromotionPiece()));
-            }
-            // remove the original piece
-            gameCopy.board.addPiece(testMove.getStartPosition(), null);
+            // make the move unsafely in the game copy
+            gameCopy.makeUnsafeMove(testMove);
 
             // if the gameCopy is in check, then the testMove is not valid
             return !gameCopy.isInCheck(teamTurn);
@@ -108,6 +102,23 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         // checks if the move is valid
         throw new InvalidMoveException("Move is not valid.");
+    }
+
+    /**
+     * Makes a move in the chess game without checking if it is valid
+     *
+     * @param move chess move to perform
+     */
+    public void makeUnsafeMove(ChessMove move) {
+
+        // make the move
+        if (move.getPromotionPiece() == null) {
+            board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
+        } else {
+            board.addPiece(move.getEndPosition(), new ChessPiece(teamTurn, move.getPromotionPiece()));
+        }
+        // remove the original piece
+        board.addPiece(move.getStartPosition(), null);
     }
 
     /**
@@ -167,7 +178,42 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        // just need to run isInCheck for the current King position and each king move
+
+        // initialize variables
+        ArrayList<Collection<ChessMove>> friendlyMoves = null;
+        ChessPosition testPosition;
+        ChessGame gameCopy;
+        ChessPiece piece;
+        int i;
+        int j;
+        // check if currently in check
+        if (!isInCheck(teamColor)) return false;
+
+        // get the king's moves
+        for (i = 1; i < 9; i++) {
+            for (j = 1; j < 9; j++) {
+                // position information
+                testPosition = new ChessPosition(i, j);
+                piece = board.getPiece(testPosition);
+
+                // don't look at null pieces
+                if (piece != null && piece.getTeamColor() == teamColor) {
+
+                    // check each of these pieces moves
+                    for (ChessMove move: piece.pieceMoves(board, testPosition)) {
+                        gameCopy = new ChessGame(this);
+                        gameCopy.makeUnsafeMove(move);
+                        System.out.println("checking %s".formatted(move));
+                        if (!gameCopy.isInCheck(teamColor)) {
+                            System.out.println("%s lets you escape check".formatted(move));
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     /**
