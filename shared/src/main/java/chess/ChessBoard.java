@@ -15,13 +15,18 @@ public class ChessBoard {
     public ChessBoard() {
     }
 
+    /**
+     * Builds a new ChessBoard from an original
+     *
+     * @param other The ChessBoard to copy
+     */
     public ChessBoard(ChessBoard other) {
 
         squares = new ChessPiece[8][8];
-        int i; int j;
-        for (i = 0; i < 8; i++) {
-            for (j = 0; j < 8; j++) {
-                squares[i][j] = other.getPiece(new ChessPosition(i + 1, j + 1));
+        int row; int col;
+        for (row = 0; row < 8; row++) {
+            for (col = 0; col < 8; col++) {
+                squares[row][col] = other.getPiece(new ChessPosition(row + 1, col + 1));
             }
         }
     }
@@ -44,8 +49,6 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-
-        // assert position is not out of bounds
         assert position.isValid(): "Piece is not on the board";
         return squares[position.getRow() - 1][position.getColumn() - 1];
     }
@@ -55,9 +58,12 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
+
+        int col;
+
         // white pieces
-        for (int i = 1; i <= 8; i++) { // pawns
-            addPiece(new ChessPosition(2, i), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
+        for (col = 1; col <= 8; col++) { // pawns
+            addPiece(new ChessPosition(2, col), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
         }
         // not pawns
         addPiece(new ChessPosition(1, 1), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
@@ -70,8 +76,8 @@ public class ChessBoard {
         addPiece(new ChessPosition(1, 8), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK));
 
         // black pieces
-        for (int i = 1; i <= 8; i++) { // pawns
-            addPiece(new ChessPosition(7, i), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
+        for (col = 1; col <= 8; col++) { // pawns
+            addPiece(new ChessPosition(7, col), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
         }
 
         // not pawns
@@ -109,12 +115,11 @@ public class ChessBoard {
             board.append('|');
             for (int col = 0; col < 8; col++) {
 
-                // blank if null
-                if (squares[row][col] == null) board.append(' ');
-
-                // add the letter if it is a piece
-                else board.append(squares[row][col]);
-
+                if (squares[row][col] == null) {
+                    board.append(' ');
+                } else {
+                    board.append(squares[row][col]);
+                }
                 board.append('|');
             }
             board.append("    |a|b|c|d|e|f|g|h|   %s\n".formatted(row + 1));
