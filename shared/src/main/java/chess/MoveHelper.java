@@ -14,7 +14,7 @@ public class MoveHelper {
         } else return false;
     }
 
-    public static void slideMoves(
+    public static void addSlideMoves(
             ChessBoard board,
             ChessPosition startPosition,
             ChessGame.TeamColor team,

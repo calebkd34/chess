@@ -20,10 +20,10 @@ public class RookMoveCalculator {
         Collection<ChessMove> validMoves = new ArrayList<>();
 
         // check all the directions
-        MoveHelper.slideMoves(board, startPosition, team, validMoves, 1, 0);
-        MoveHelper.slideMoves(board, startPosition, team, validMoves, -1, 0);
-        MoveHelper.slideMoves(board, startPosition, team, validMoves, 0, 1);
-        MoveHelper.slideMoves(board, startPosition, team, validMoves, 0, -1);
+        MoveHelper.addSlideMoves(board, startPosition, team, validMoves, 1, 0);
+        MoveHelper.addSlideMoves(board, startPosition, team, validMoves, -1, 0);
+        MoveHelper.addSlideMoves(board, startPosition, team, validMoves, 0, 1);
+        MoveHelper.addSlideMoves(board, startPosition, team, validMoves, 0, -1);
 
         return validMoves;
     }
