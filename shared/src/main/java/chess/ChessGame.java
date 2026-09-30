@@ -21,6 +21,12 @@ public class ChessGame {
         board.resetBoard();
     }
 
+    /**
+     * Constructs a new ChessGame, copying an existing one instead
+     * of using the default state
+     *
+     * @param game The game to build the copy of
+     */
     public ChessGame(ChessGame game) {
         teamTurn = game.getTeamTurn();
         board = new ChessBoard(game.getBoard());
@@ -69,8 +75,8 @@ public class ChessGame {
 
             // remove any moves that self-check
             possibleMoves.removeIf(move -> !checkMove(move));
-            return possibleMoves;
-        } else return possibleMoves;
+        }
+        return possibleMoves;
     }
 
     /**
@@ -81,21 +87,22 @@ public class ChessGame {
      */
     public boolean checkMove(ChessMove testMove) {
 
-        // make sure the move involves pieces
+        // make sure the move is possible
         if (testMove != null && board.getPiece(testMove.getStartPosition()) != null) {
-            // make sure the move iss on the board
             if (MoveHelper.check(board, testMove.getEndPosition(), teamTurn)) {
 
-                // make a game copy to test the end state on
-                ChessGame gameCopy = new ChessGame(this);
+                // test the testMove in the new copy
+                ChessGame testGame = new ChessGame(this);
+                testGame.makeUnsafeMove(testMove);
 
-                // make the move unsafely in the game copy
-                gameCopy.makeUnsafeMove(testMove);
-
-                // if the gameCopy is in check, then the testMove is not valid
-                return !gameCopy.isInCheck(board.getPiece(testMove.getStartPosition()).getTeamColor());
-            } else return false;
-        } else return false;
+                // if the test game is in check, then the testMove is not valid
+                return !testGame.isInCheck(board.getPiece(testMove.getStartPosition()).getTeamColor());
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -108,9 +115,9 @@ public class ChessGame {
 
         // check if the piece is there and is the right color and is on the board
         if (checkMove(move) && board.getPiece(move.getStartPosition()).getTeamColor() == teamTurn) {
+
             // go through each of the allowed moves from the start position
             for (ChessMove testMove : validMoves(move.getStartPosition())) {
-                // check to see if the move is in the allowed moves
                 if (move.equals(testMove)) {
                     makeUnsafeMove(move);
                     switch(teamTurn){ // make sure to change the turn
@@ -154,18 +161,20 @@ public class ChessGame {
         ChessPosition kingPosition = null;
         ChessPosition testPosition;
         ChessPiece piece;
-        int i;
-        int j;
+        int row;
+        int col;
 
-        // get piece information
-        for (i = 1; i < 9; i++) {
-            for (j = 1; j < 9; j++) {
+        // look at the whole board
+        for (row = 1; row < 9; row++) {
+            for (col = 1; col < 9; col++) {
+
                 // position information
-                testPosition = new ChessPosition(i, j);
+                testPosition = new ChessPosition(row, col);
                 piece = board.getPiece(testPosition);
 
-                // don't look at null pieces
-                if (piece == null) continue;
+                if (piece == null) {
+                    continue;
+                }
 
                 // check for the friendly king
                 if (piece.getTeamColor() == teamColor && piece.getPieceType() == ChessPiece.PieceType.KING) {
