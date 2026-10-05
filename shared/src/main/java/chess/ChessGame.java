@@ -74,7 +74,7 @@ public class ChessGame {
             possibleMoves = startPiece.pieceMoves(board, startPosition);
 
             // remove any moves that self-check
-            possibleMoves.removeIf(move -> !checkMove(move));
+            possibleMoves.removeIf(move -> !testMove(move));
         }
         return possibleMoves;
     }
@@ -85,7 +85,7 @@ public class ChessGame {
      * @param testMove the move to see if is valid
      * @return True if the move can be made, else false
      */
-    public boolean checkMove(ChessMove testMove) {
+    public boolean testMove(ChessMove testMove) {
 
         // make sure the move is possible
         if (testMove != null && board.getPiece(testMove.getStartPosition()) != null) {
@@ -114,7 +114,7 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
 
         // check if the piece is there and is the right color and is on the board
-        if (checkMove(move) && board.getPiece(move.getStartPosition()).getTeamColor() == teamTurn) {
+        if (testMove(move) && board.getPiece(move.getStartPosition()).getTeamColor() == teamTurn) {
 
             // go through each of the allowed moves from the start position
             for (ChessMove testMove : validMoves(move.getStartPosition())) {
