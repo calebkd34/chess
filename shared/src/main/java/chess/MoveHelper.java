@@ -11,7 +11,9 @@ public class MoveHelper {
 
         if (endPosition.isValid()) {
             return board.getPiece(endPosition) == null || board.getPiece(endPosition).getTeamColor() != team;
-        } else return false;
+        } else {
+            return false;
+        }
     }
 
     public static void addSlideMoves(
@@ -31,8 +33,12 @@ public class MoveHelper {
             testPosition = new ChessPosition(x, y);
             if (check(board, testPosition, team)) {
                 validMoves.add(new ChessMove(startPosition, testPosition, null));
-                if (board.getPiece(testPosition) != null) break; // break after capturing
-            } else break; // break if move not valid
+                if (board.getPiece(testPosition) != null) {
+                    break; // break after capturing
+                }
+            } else {
+                break; // break if move not valid
+            }
         }
     }
 }
