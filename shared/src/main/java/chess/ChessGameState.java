@@ -5,7 +5,7 @@ import java.util.Collection;
 
 public class ChessGameState {
 
-    private ChessGame game;
+    private final ChessGame game;
     private final ChessPosition kingPosition;
     private final ChessGame.TeamColor teamColor;
     private final Collection<ChessMove> kingMoves;
@@ -113,6 +113,18 @@ public class ChessGameState {
     }
 
     private boolean canBlock() {
-        // TODO: simulate each friendly move, if any are safe return true
+
+        ChessGameState simulatedGameState;
+        ChessGame simulatedGame = new ChessGame(game);
+
+        // simulate each friendly move, if any are safe return true
+        for (ChessMove move : friendlyMoves) {
+            simulatedGame.makeUnsafeMove(move);
+            simulatedGameState = new ChessGameState(game, teamColor);
+            if (!simulatedGameState.isInCheck()) {
+                 return true;
+            }
+        }
+        return false;
     }
 }
