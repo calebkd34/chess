@@ -3,7 +3,7 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class ChessGameStatusCalculator {
+public class ChessGameStateCalculator {
 
     // TODO: make the checkMoveResult look at the move and return a literal describing
     //  the game state (WHITE_CHECKED, BLACK_CHECKMATED, etc.)
@@ -13,10 +13,8 @@ public class ChessGameStatusCalculator {
      * Enum identifying the six possible game states
      */
     public enum GameState {
-        BLACK_IN_CHECK,
-        WHITE_IN_CHECK,
-        BLACK_IN_CHECKMATE,
-        WHITE_IN_CHECKMATE,
+        CHECK,
+        CHECKMATE,
         STALEMATE,
         NORMAL
     }
@@ -27,35 +25,23 @@ public class ChessGameStatusCalculator {
      * @param testMove the move to see if is valid
      * @return True if the move can be made, else false
      */
-    public boolean checkMoveResult(ChessGame game, ChessMove testMove) {
+    public static GameState checkMoveResult(ChessGame game, ChessMove testMove) {
 
-        // make sure the move is possible
-        if (testMove != null && game.board.getPiece(testMove.getStartPosition()) != null) {
-            if (MoveHelper.check(game.board, testMove.getEndPosition(), game.teamTurn)) {
-
-                // test the testMove in the new copy
-                ChessGame testGame = new ChessGame(game);
-                testGame.makeUnsafeMove(testMove);
-
-                // if the test game is in check, then the testMove is not valid
-                return !testGame.isInCheck(game.board.getPiece(testMove.getStartPosition()).getTeamColor());
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
+        // we will simulate a game with the testMove and return the result
+        ChessGame testGame = new ChessGame(game);
+        testGame.makeUnsafeMove(testMove);
+        return getGameState(testGame, game.getTeamTurn(), true);
     }
 
-    public GameState getGameState(ChessGame game) {
+    public static GameState getGameState(ChessGame game, ChessGame.TeamColor teamColor, boolean isMyTurn) {
 
         // initialize variables
         Collection<ChessMove> enemyMoves = new ArrayList<>();
         Collection<ChessMove> kingMoves = new ArrayList<>();
         ChessPosition kingPosition = null;
-        boolean kingCantMove = false;
-        boolean kingIsStuck = true;
-        boolean kingIsThreatened = false;
+        boolean kingCantMove;
+        boolean kingIsStuck;
+        boolean kingIsThreatened;
         ChessPosition testPosition;
         ChessPiece piece;
         int row;
@@ -74,7 +60,7 @@ public class ChessGameStatusCalculator {
                 }
 
                 // get the friendly king information
-                if (piece.getTeamColor() == game.getTeamTurn() && piece.getPieceType() == ChessPiece.PieceType.KING) {
+                if (piece.getTeamColor() == teamColor && piece.getPieceType() == ChessPiece.PieceType.KING) {
                     kingPosition = testPosition;
                     kingMoves = piece.pieceMoves(game.board, kingPosition);
                 }
@@ -87,45 +73,54 @@ public class ChessGameStatusCalculator {
         }
 
         /*
-        This part can be confusing.
+        This part can be confusing. It looks at every enemy move and sees if threatens
+        the king's possible moves. If even one piece is threatened then kingCantMove to the square.
+        Then, if any possible kingMove is unthreatened, then the king is not stuck
          */
+        kingIsStuck = true;
         for (ChessMove kingMove : kingMoves) {
+            kingCantMove = false;
             for (ChessMove move : enemyMoves) {
+                // check the king's surroundings
                 if (move.getEndPosition().equals(kingMove.getEndPosition())) {
                     kingCantMove = true;
                     break;
                 }
             }
-            if (!kingCantMove) {
+            if (!kingCantMove) { // if any spot is open the king can move
                 kingIsStuck = false;
             }
         }
 
         // check if the king is threatened in his current position
+        kingIsThreatened = false;
         for (ChessMove move : enemyMoves) {
             if (move.getEndPosition().equals(kingPosition)) {
+
+                // check if the move self-checks
+
                 kingIsThreatened = true;
                 break;
             }
         }
 
-        // logic for what game state is here
-        if (game.teamTurn == ChessGame.TeamColor.BLACK) {
-            if (kingIsStuck && kingIsThreatened) {
-                return GameState.BLACK_IN_CHECKMATE;
-            } else if (kingIsStuck) {
-                return GameState.STALEMATE;
+        // edge case: the king can't move because it is blocked by its own pieces
+        System.out.println(kingMoves);
+        if (kingMoves.isEmpty()) {
+            kingIsStuck = false;
+        }
+
+        // logic for game state
+        if (kingIsStuck) {
+            if (kingIsThreatened) {
+                return GameState.CHECKMATE;
             } else {
-                return GameState.NORMAL;
+                return GameState.STALEMATE;
             }
+        } else if (kingIsThreatened) {
+            return GameState.CHECK;
         } else {
-            if (kingIsStuck && kingIsThreatened) {
-                return GameState.WHITE_IN_CHECKMATE;
-            } else if (kingIsStuck) {
-                return GameState.STALEMATE;
-            } else {
-                return GameState.NORMAL;
-            }
+            return GameState.NORMAL;
         }
     }
 }

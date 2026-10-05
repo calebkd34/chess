@@ -13,7 +13,7 @@ import java.util.Objects;
 public class ChessGame {
 
     public ChessBoard board;
-    public TeamColor teamTurn;
+    private TeamColor teamTurn;
 
     public ChessGame() {
         teamTurn = TeamColor.WHITE;
@@ -248,36 +248,7 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-
-        // initialize variables
-        ChessPosition testPosition;
-        ChessGame gameCopy;
-        ChessPiece piece;
-        int i;
-        int j;
-        // check if currently in check
-        if (isInCheck(teamColor)) return false;
-
-        // get the king's moves
-        for (i = 1; i < 9; i++) {
-            for (j = 1; j < 9; j++) {
-                // position information
-                testPosition = new ChessPosition(i, j);
-                piece = board.getPiece(testPosition);
-
-                // don't look at null pieces
-                if (piece != null && piece.getTeamColor() == teamColor) {
-
-                    // check each of these pieces moves
-                    for (ChessMove move: piece.pieceMoves(board, testPosition)) {
-                        gameCopy = new ChessGame(this);
-                        gameCopy.makeUnsafeMove(move);
-                        if (!gameCopy.isInCheck(teamColor)) return false;
-                    }
-                }
-            }
-        }
-        return true;
+        return ChessGameStateCalculator.getGameState(this, teamColor) == ChessGameStateCalculator.GameState.STALEMATE;
     }
 
     /**
