@@ -3,6 +3,9 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * A class to test the possible game states and moves of a chess game
+ */
 public class ChessGameState {
 
     private final ChessGame game;
@@ -27,7 +30,8 @@ public class ChessGameState {
         Collection<ChessMove> friendlyMoves = new ArrayList<>();
 
         // compile all the moves
-        int row; int col;
+        int row;
+        int col;
         for (row = 1; row <= 8; row++) {
             for (col = 1; col <= 8; col++) {
 
@@ -57,7 +61,7 @@ public class ChessGameState {
             }
         }
 
-        assert kingPosition != null: "no king found";
+        assert kingPosition != null : "no king found";
         this.kingPosition = kingPosition;
         this.enemyMoves = enemyMoves;
         this.friendlyMoves = friendlyMoves;
@@ -79,12 +83,21 @@ public class ChessGameState {
     }
 
     /**
-     * Checks to see if the board stat is in checkmate
+     * Checks to see if the board is in  checkmate
      *
      * @return true if in checkmate
      */
     public boolean isInCheckmate() {
-        return (!isInCheck() && isKingStuck() && !canBlock());
+        return isInCheck() && isKingStuck() && cannotBlock();
+    }
+
+    /**
+     * Checks to see if the board is in a stalemate
+     *
+     * @return true if in a stalemate
+     */
+    public boolean isInStalemate() {
+        return isKingStuck() && cannotBlock() && !isInCheck();
     }
 
     /**
@@ -94,37 +107,46 @@ public class ChessGameState {
      */
     private boolean isKingStuck() {
 
+        ChessGame simulatedGame;
+        ChessGameState simulatedGameState;
         // look at each move and see if safe
-        boolean kingCantMove;
         for (ChessMove kingMove : kingMoves) {
-            kingCantMove = false;
-            for (ChessMove move : enemyMoves) {
-                // check the king's surroundings
-                if (move.getEndPosition().equals(kingMove.getEndPosition())) {
-                    kingCantMove = true;
-                    break;
-                }
-            }
-            if (!kingCantMove) { // if any spot is open the king can move
+
+            // simulate the move
+            simulatedGame = new ChessGame(game);
+            simulatedGame.makeUnsafeMove(kingMove);
+            simulatedGameState = new ChessGameState(simulatedGame, teamColor);
+
+            // if the simulated game is not in check the king is not stuck
+            if (!simulatedGameState.isInCheck()) {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean canBlock() {
+    /**
+     * Checks to see if the defender is unable to block
+     *
+     * @return true if the king cannot be defended
+     */
+    private boolean cannotBlock() {
 
+        // initialize variables
         ChessGameState simulatedGameState;
-        ChessGame simulatedGame = new ChessGame(game);
+        ChessGame simulatedGame;
 
         // simulate each friendly move, if any are safe return true
         for (ChessMove move : friendlyMoves) {
+
+            // simulate move
+            simulatedGame = new ChessGame(game);
             simulatedGame.makeUnsafeMove(move);
-            simulatedGameState = new ChessGameState(game, teamColor);
+            simulatedGameState = new ChessGameState(simulatedGame, teamColor);
             if (!simulatedGameState.isInCheck()) {
-                 return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 }
