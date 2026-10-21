@@ -1,4 +1,4 @@
 package request;
 
-public class LoginRequest extends Request{
+public class LoginRequest {
 }

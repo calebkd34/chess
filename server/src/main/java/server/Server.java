@@ -13,9 +13,14 @@ public class Server {
 
         // Register your endpoints and exception handlers here.
 
-        // delete
+        // clear
         ClearHandler clearHandler = new ClearHandler();
         javalin.delete("/db", clearHandler::handleRequest);
+
+        // register
+        RegisterHandler registerHandler = new RegisterHandler();
+        javalin.post("/user", registerHandler::handleRequest);
+
     }
 
     public int run(int desiredPort) {

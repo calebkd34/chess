@@ -1,13 +1,12 @@
 package result;
 
-public class RegisterResult {
+public record RegisterResult(String message, String username, String authToken) {
 
-    private final String username;
-    private final String authToken;
+    public RegisterResult(String message) {
+        this(message, null, null);
+    }
 
-    public RegisterResult(String message, String username, String authToken) {
-        super(message);
-        this.username = username;
-        this.authToken = authToken;
+    public RegisterResult(String username, String authToken) {
+        this(null, username, authToken);
     }
 }

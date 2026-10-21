@@ -22,9 +22,9 @@ public class ClearHandler {
             ClearResult result = clearService.clear(request);
             context.status(200);
             return Serializer.toJson(result);
-        } catch (BadRequestException error) {
-            context.status(400);
-            return "{\"message\":\"\"Error: bad request";
+        } catch (Exception error) {
+            context.status(500);
+            return "{\"message\":\"Error: %s\"".formatted(error);
         }
     }
 }
