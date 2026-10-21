@@ -2,6 +2,7 @@ package service;
 
 import dataaccess.AuthDAO;
 import dataaccess.GameDAO;
+import dataaccess.MemoryUserDAO;
 import dataaccess.UserDAO;
 
 public class ClearService {
@@ -11,7 +12,7 @@ public class ClearService {
     private final AuthDAO authDao;
 
     public ClearService() {
-        userDao = new UserDAO();
+        userDao = new MemoryUserDAO();
         gameDao = new GameDAO();
         authDao = new AuthDAO();
     }

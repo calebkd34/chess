@@ -2,21 +2,13 @@ package dataaccess;
 
 import model.UserData;
 
-public class UserDAO {
+public interface UserDAO {
 
-    public UserDAO() {
-    }
+    void createUser(UserData user);
 
-    public void createUser(UserData user) {
-    }
+    UserData getUser(String username);
 
-    public UserData getUser(String username) {
-        return null;
-    }
+    void clearUser(UserData user);
 
-    public void clearUser(UserData user) {
-    }
-
-    public void clearAllUsers() {
-    }
+    void clearAllUsers();
 }
