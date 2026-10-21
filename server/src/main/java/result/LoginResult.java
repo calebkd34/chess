@@ -1,6 +1,6 @@
 package result;
 
-public class LoginResult extends Result{
+public class LoginResult {
 
     private final String authToken;
     private final String username;

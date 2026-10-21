@@ -11,7 +11,4 @@ public class Handler {
         serializer = new Gson();
     }
 
-    public void handleRequest(Context context) {
-    }
-
 }

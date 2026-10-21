@@ -1,6 +1,6 @@
 package result;
 
-public class CreateGameResult extends Result{
+public class CreateGameResult {
 
     private final int gameID;
 

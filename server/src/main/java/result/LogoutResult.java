@@ -1,6 +1,6 @@
 package result;
 
-public class LogoutResult extends Result {
+public class LogoutResult {
 
     public LogoutResult(String message) {
         super(message);
