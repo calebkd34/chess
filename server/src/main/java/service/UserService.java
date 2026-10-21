@@ -6,17 +6,11 @@ import model.UserData;
 import request.RegisterRequest;
 import result.RegisterResult;
 
-public class UserService {
-
-    private final UserDAO userDao;
-
-    public UserService() {
-        userDao = new MemoryUserDAO();
-    }
+public class UserService extends Service {
 
     public RegisterResult register(RegisterRequest request) throws AlreadyTakenException {
 
-        if (userDao.getUser(request.username()) != null) {
+        if (userDao.getUser(request.getUsername()) != null) {
             throw new AlreadyTakenException("Username already taken");
         }
         // create new userdata

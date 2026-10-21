@@ -2,21 +2,13 @@ package dataaccess;
 
 import model.AuthData;
 
-public class AuthDAO {
+public interface AuthDAO {
 
-    public AuthDAO() {
-    }
+    void createAuth(AuthData authData);
 
-    public void createAuth(AuthData authData) {
-    }
+    AuthData getAuth(String authToken);
 
-    public AuthData getAuth(AuthData authData) {
-        return null;
-    }
+    void clearAuth(AuthData authData);
 
-    public void clearAuth(AuthData authData) {
-    }
-
-    public void clearAllAuths() {
-    }
+    void clearAllAuths();
 }

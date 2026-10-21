@@ -2,21 +2,13 @@ package dataaccess;
 
 import model.GameData;
 
-public class GameDAO {
+public interface GameDAO {
 
-    public GameDAO() {
-    }
+    void createGame(GameData game);
 
-    public void createGame(GameData game) {
-    }
+    GameData getGame(int gameId, String playerColor);
 
-    public GameData getGame(int gameId, String playerColor) {
-        return null;
-    }
+    void clearGame(GameData game);
 
-    public void clearGame(GameData game) {
-    }
-
-    public void clearAllGames() {
-    }
+    void clearAllGames();
 }

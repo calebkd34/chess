@@ -1,23 +1,12 @@
 package handler;
 
-import com.google.gson.Gson;
 import io.javalin.http.Context;
-import model.UserData;
 import request.RegisterRequest;
 
-public class RegisterHandler {
+public class RegisterHandler extends Handler{
 
-    private final Gson serializer;
-
-    public RegisterHandler() {
-        serializer = new Gson();
-    }
-
+    @Override
     public void handleRequest(Context context) {
-
-        // json stuff
         RegisterRequest request = serializer.fromJson(context.body(), RegisterRequest.class);
-
-        System.out.println(request);
     }
 }
