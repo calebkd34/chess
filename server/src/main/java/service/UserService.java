@@ -12,7 +12,7 @@ import java.util.UUID;
 public class UserService extends Service {
 
     /**
-     * Registers the user and returns an authToken
+     * Registers a new user
      *
      * @param request contains the username, email and password to register with
      * @return the username and authToken created
@@ -42,10 +42,20 @@ public class UserService extends Service {
         return new RegisterResult(request.username(), authToken);
     }
 
+    /**
+     *
+     * Logs in an existing user
+     *
+     * @param request the object containing username, password, email
+     * @return LoginResult object containing username and authToken
+     * @throws BadRequestException when any fields are left blank
+     * @throws UnauthorizedException when username or password is incorrect
+     */
     public LoginResult login(LoginRequest request) throws BadRequestException, UnauthorizedException {
 
         // left a field blank
-        if (request.username() == null || request.password() == null || request.email() == null) {
+        if (request.username() == null || request.password() == null) {
+            System.out.println("blank field");
             throw new BadRequestException("Field cannot be left blank");
         }
 
@@ -55,8 +65,8 @@ public class UserService extends Service {
             throw new UnauthorizedException("Specified username does not exist");
         }
 
-        // check if the password and email matches
-        if (!user.password().equals(request.password()) || !user.email().equals(request.email())) {
+        // check if the password matches
+        if (!user.password().equals(request.password())) {
             throw new UnauthorizedException("Password does not match");
         }
 

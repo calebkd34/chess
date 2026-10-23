@@ -13,7 +13,7 @@ public class LoginHandler extends Handler{
     private static final UserService userService = new UserService();
 
     /**
-     * logs an existing user in
+     * Logs in an existing user
      *
      * @param context the http JSON body
      */
@@ -22,6 +22,7 @@ public class LoginHandler extends Handler{
         LoginResult result;
         try {
             LoginRequest request = Serializer.fromJson(context.body(), LoginRequest.class);
+            System.out.println(request);
             result = userService.login(request);
             context.status(200);
         }

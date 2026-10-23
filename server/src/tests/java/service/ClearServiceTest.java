@@ -11,7 +11,7 @@ class ClearServiceTest {
     private static final ClearService clearService = new ClearService();
 
     @Test
-    void clearSuccess() {
+    void clearSuccess() throws BadRequestException {
         assertEquals(new ClearResult(), clearService.clear(new ClearRequest()));
     }
 
