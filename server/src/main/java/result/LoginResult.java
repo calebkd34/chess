@@ -1,12 +1,12 @@
 package result;
 
-public class LoginResult {
+public record LoginResult (String messge, String username, String authToken) {
 
-    private final String authToken;
-    private final String username;
+    public LoginResult(String username, String authToken) {
+        this(null, username, authToken);
+    }
 
-    public LoginResult(String message, String username, String authToken) {
-        this.username = username;
-        this.authToken = authToken;
+    public  LoginResult(String message) {
+        this(message, null, null);
     }
 }

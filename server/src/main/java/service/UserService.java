@@ -2,7 +2,9 @@ package service;
 
 import model.AuthData;
 import model.UserData;
+import request.LoginRequest;
 import request.RegisterRequest;
+import result.LoginResult;
 import result.RegisterResult;
 
 import java.util.UUID;
@@ -38,5 +40,29 @@ public class UserService extends Service {
 
         // return the register result
         return new RegisterResult(request.username(), authToken);
+    }
+
+    public LoginResult login(LoginRequest request) throws BadRequestException, UnauthorizedException {
+
+        // left a field blank
+        if (request.username() == null || request.password() == null || request.email() == null) {
+            throw new BadRequestException("Field cannot be left blank");
+        }
+
+        // try and get the username information
+        UserData user = userDao.getUser(request.username());
+        if (user == null) {
+            throw new UnauthorizedException("Specified username does not exist");
+        }
+
+        // check if the password and email matches
+        if (!user.password().equals(request.password()) || !user.email().equals(request.email())) {
+            throw new UnauthorizedException("Password does not match");
+        }
+
+        // create an authToken
+        String authToken = createAuth(request.username());
+
+        return new LoginResult(request.username(), authToken);
     }
 }

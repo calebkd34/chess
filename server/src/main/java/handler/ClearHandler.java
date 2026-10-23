@@ -14,9 +14,8 @@ public class ClearHandler {
      * handles a request for to clear the database
      *
      * @param context the context from the serve, containing body
-     * @return the JSON body of the request result
      */
-    public String handleRequest(Context context) {
+    public void handleRequest(Context context) {
         ClearResult result;
 
         try {
@@ -28,6 +27,6 @@ public class ClearHandler {
             context.status(500);
             result = new ClearResult("Error: %s".formatted(error));
         }
-        return Serializer.toJson(result);
+        context.result(Serializer.toJson(result));
     }
 }

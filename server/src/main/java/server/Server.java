@@ -1,6 +1,7 @@
 package server;
 
 import handler.ClearHandler;
+import handler.LoginHandler;
 import handler.RegisterHandler;
 import io.javalin.*;
 
@@ -21,6 +22,9 @@ public class Server {
         RegisterHandler registerHandler = new RegisterHandler();
         javalin.post("/user", registerHandler::handleRequest);
 
+        // login
+        LoginHandler loginHandler = new LoginHandler();
+        javalin.post("/session", loginHandler::handleRequest);
     }
 
     public int run(int desiredPort) {

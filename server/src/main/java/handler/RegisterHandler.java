@@ -12,6 +12,11 @@ public class RegisterHandler {
 
     private static final UserService userService = new UserService();
 
+    /**
+     * registers a new user
+     *
+     * @param context the context from the http request containing the JSON body
+     */
     public void handleRequest(Context context) {
 
         RegisterResult result;

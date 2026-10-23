@@ -1,7 +1,13 @@
 package service;
 
-public class BadRequestException extends RuntimeException {
+/**
+ * Indicates something was already taken
+ */
+public class BadRequestException extends Exception{
     public BadRequestException(String message) {
         super(message);
+    }
+    public BadRequestException(String message, Throwable ex) {
+        super(message, ex);
     }
 }
