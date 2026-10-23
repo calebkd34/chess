@@ -5,6 +5,8 @@ import model.GameData;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Collections.max;
+
 public class MemoryGameDAO implements GameDAO {
 
     private static final Map<Integer, GameData> gameDataMap = new HashMap<>();
@@ -18,6 +20,15 @@ public class MemoryGameDAO implements GameDAO {
     public GameData getGame(int gameID, String playerColor) {
         return gameDataMap.get(gameID);
     }
+
+    @Override
+    public Integer nextGameID() {
+        if (gameDataMap.isEmpty()) {
+            return 1;
+        }
+        return max(gameDataMap.keySet()) + 1;
+    }
+
 
     @Override
     public void removeGame(GameData game) {

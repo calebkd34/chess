@@ -1,9 +1,6 @@
 package server;
 
-import handler.ClearHandler;
-import handler.LoginHandler;
-import handler.LogoutHandler;
-import handler.RegisterHandler;
+import handler.*;
 import io.javalin.*;
 
 public class Server {
@@ -12,8 +9,6 @@ public class Server {
 
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
-
-        // Register your endpoints and exception handlers here.
 
         // clear
         ClearHandler clearHandler = new ClearHandler();
@@ -30,6 +25,10 @@ public class Server {
         // logout
         LogoutHandler logoutHandler = new LogoutHandler();
         javalin.delete("/session", logoutHandler::handleRequest);
+
+        // create game
+        CreateGameHandler createGameHandler = new CreateGameHandler();
+        javalin.post("/game", createGameHandler::handleRequest);
     }
 
     public int run(int desiredPort) {

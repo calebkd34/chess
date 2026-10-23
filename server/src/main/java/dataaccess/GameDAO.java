@@ -8,6 +8,8 @@ public interface GameDAO {
 
     GameData getGame(int gameId, String playerColor);
 
+    Integer nextGameID();
+
     void removeGame(GameData game);
 
     void removeAllGames();
