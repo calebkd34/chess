@@ -20,12 +20,12 @@ public class MemoryUserDAO implements UserDAO {
     }
 
     @Override
-    public void clearUser(UserData user) {
+    public void removeUser(UserData user) {
         userDataMap.remove(user.username());
     }
 
     @Override
-    public void clearAllUsers() {
+    public void removeAllUsers() {
     userDataMap.clear();
     }
 }

@@ -1,10 +1,12 @@
 package result;
 
-public class CreateGameResult {
+public record CreateGameResult(String message, Integer gameID) {
 
-    private final int gameID;
+    public CreateGameResult(String message) {
+        this(message, null);
+    }
 
-    public CreateGameResult(String message, int gameID) {
-        this.gameID = gameID;
+    public CreateGameResult(Integer gameID) {
+        this(null, gameID);
     }
 }

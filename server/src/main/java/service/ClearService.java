@@ -17,8 +17,8 @@ public class ClearService extends Service {
         if (request == null) {
             throw new BadRequestException("Error: Bad Request");
         }
-        userDao.clearAllUsers();
-        gameDao.clearAllGames();
+        userDao.removeAllUsers();
+        gameDao.removeAllGames();
         authDao.removeAllAuths();
 
         return new ClearResult();

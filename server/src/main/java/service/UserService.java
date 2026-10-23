@@ -77,6 +77,13 @@ public class UserService extends Service {
         return new LoginResult(request.username(), authToken);
     }
 
+    /**
+     * Logout a user who is logged in
+     *
+     * @param request contains the authToken
+     * @return an empty body
+     * @throws UnauthorizedException when the authToken is wrong or missing
+     */
     public LogoutResult logout(LogoutRequest request) throws UnauthorizedException {
 
         // left a field blank
