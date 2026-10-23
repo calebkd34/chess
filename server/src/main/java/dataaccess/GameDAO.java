@@ -6,7 +6,7 @@ public interface GameDAO {
 
     void createGame(GameData game);
 
-    GameData getGame(int gameId, String playerColor);
+    GameData getGame(int gameId);
 
     Integer nextGameID();
 

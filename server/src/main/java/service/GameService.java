@@ -12,7 +12,16 @@ import result.ListGamesResult;
 
 public class GameService extends Service{
 
-    public CreateGameResult createGame(String authToken, CreateGameRequest request) throws UnauthorizedException, BadRequestException {
+    /**
+     * Creates a new game with the given name.
+     *
+     * @param authToken proof the user is logged in
+     * @param request contains the new game name
+     * @return JSON of new game ID
+     * @throws UnauthorizedException when the authToken is wrong
+     * @throws BadRequestException when no name is given
+     */
+    public CreateGameResult createGame(String authToken, CreateGameRequest request) throws UnauthorizedException, BadRequestException, AlreadyTakenException {
 
         // check the request
         if (request.gameName() == null) {
