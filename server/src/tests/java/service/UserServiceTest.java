@@ -1,13 +1,13 @@
 package service;
 
 import model.UserData;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import request.ClearRequest;
 import request.LoginRequest;
+import request.LogoutRequest;
 import request.RegisterRequest;
 import result.LoginResult;
+import result.LogoutResult;
 import result.RegisterResult;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,14 +27,13 @@ class UserServiceTest {
             "password",
             "me@gmail.com");
 
-    public void addExisting() throws BadRequestException, AlreadyTakenException {
+    public RegisterResult addExisting() throws BadRequestException, AlreadyTakenException {
         RegisterRequest request = new RegisterRequest(
                 existingUser.username(),
                 existingUser.password(),
                 existingUser.email());
-        userService.register(request);
+        return userService.register(request);
     }
-
 
     @Test
     void registerSuccess() throws AlreadyTakenException, BadRequestException {
@@ -105,6 +104,20 @@ class UserServiceTest {
                 "wrongPassword"
         );
         assertThrows(UnauthorizedException.class, () -> userService.login(request));
+    }
+
+    @Test
+    void logoutSuccess() throws BadRequestException, AlreadyTakenException, UnauthorizedException {
+        clearService.clear(clearRequest);
+        String authToken = addExisting().authToken();
+        LogoutRequest request = new LogoutRequest(authToken);
+        assertEquals(new LogoutResult(), userService.logout(request));
+    }
+
+    @Test
+    void logoutUnauthorized() throws BadRequestException {
+        clearService.clear(clearRequest);
+        assertThrows(UnauthorizedException.class, () -> userService.logout(new LogoutRequest("hello world")));
     }
 
 }
