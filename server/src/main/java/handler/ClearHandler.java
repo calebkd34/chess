@@ -2,7 +2,6 @@ package handler;
 
 import io.javalin.http.Context;
 import json.Serializer;
-import request.ClearRequest;
 import result.ClearResult;
 import service.ClearService;
 
@@ -20,7 +19,7 @@ public class ClearHandler {
 
         try {
             context.status(200);
-            result = clearService.clear(new ClearRequest());
+            result = clearService.clear();
         }
         // presumably runtime error
         catch (Exception error) {

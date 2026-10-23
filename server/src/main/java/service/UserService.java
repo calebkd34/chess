@@ -80,19 +80,14 @@ public class UserService extends Service {
     /**
      * Logout a user who is logged in
      *
-     * @param request contains the authToken
+     * @param authToken the authToken
      * @return an empty body
      * @throws UnauthorizedException when the authToken is wrong or missing
      */
-    public LogoutResult logout(LogoutRequest request) throws UnauthorizedException {
-
-        // left a field blank
-        if (request.authToken() == null) {
-            throw new UnauthorizedException("No authToken was provided");
-        }
+    public LogoutResult logout(String authToken) throws UnauthorizedException {
 
         // try to get the authToken from the db
-        AuthData auth = authDao.getAuth(request.authToken());
+        AuthData auth = authDao.getAuth(authToken);
         if (auth == null) {
             throw new UnauthorizedException("The provided authToken is not associated with a user");
         }

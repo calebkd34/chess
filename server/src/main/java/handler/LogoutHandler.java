@@ -20,9 +20,7 @@ public class LogoutHandler extends Handler {
 
         LogoutResult result;
         try {
-            LogoutRequest request = new LogoutRequest(context.header("authorization"));
-            System.out.println(request);
-            result = userService.logout(request);
+            result = userService.logout(context.header("authorization"));
             context.status(200);
         }
         // thrown when request was invalid
