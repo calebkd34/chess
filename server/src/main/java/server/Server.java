@@ -29,6 +29,10 @@ public class Server {
         // create game
         CreateGameHandler createGameHandler = new CreateGameHandler();
         javalin.post("/game", createGameHandler::handleRequest);
+
+        // list games
+        ListGamesHandler listGamesHandler = new ListGamesHandler();
+        javalin.get("/game", listGamesHandler::handleRequest);
     }
 
     public int run(int desiredPort) {

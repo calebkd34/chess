@@ -2,6 +2,7 @@ package dataaccess;
 
 import model.GameData;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,13 +23,17 @@ public class MemoryGameDAO implements GameDAO {
     }
 
     @Override
+    public Collection<GameData> listGames() {
+        return gameDataMap.values();
+    }
+
+    @Override
     public Integer nextGameID() {
         if (gameDataMap.isEmpty()) {
             return 1;
         }
         return max(gameDataMap.keySet()) + 1;
     }
-
 
     @Override
     public void removeGame(GameData game) {

@@ -5,10 +5,12 @@ import kotlin.NotImplementedError;
 import model.GameData;
 import request.CreateGameRequest;
 import request.JoinGameRequest;
-import request.ListGamesRequest;
 import result.CreateGameResult;
 import result.JoinGameResult;
 import result.ListGamesResult;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class GameService extends Service{
 
@@ -40,8 +42,32 @@ public class GameService extends Service{
         return new CreateGameResult(game.gameID());
     }
 
-    public ListGamesResult listGames(String authToken, ListGamesRequest request) {
-        throw new NotImplementedError("Not implemented");
+    /**
+     * Gets the list of current games
+     *
+     * @param authToken the authToken
+     * @return a list of the current games
+     * @throws UnauthorizedException thrown when authToken is incorrect
+     */
+    public ListGamesResult listGames(String authToken) throws UnauthorizedException {
+
+        // check the authToken
+        if (authDao.getAuth(authToken) == null) {
+            throw new UnauthorizedException("Error: unauthorized");
+        }
+
+        // get the list of games
+        Collection<ListGamesResult.Game> translatedGames = new ArrayList<>();
+        for (GameData game : gameDao.listGames()) {
+            translatedGames.add(new ListGamesResult.Game(
+                    game.gameID(),
+                    game.whiteUsername(),
+                    game.blackUsername(),
+                    game.gameName()
+            ));
+        }
+
+        return new ListGamesResult(translatedGames);
     }
 
     public JoinGameResult joinGame(String authToken, JoinGameRequest request) {
