@@ -1,11 +1,14 @@
 package service;
 
-import model.UserData;
-import org.junit.jupiter.api.BeforeAll;
+import model.GameData;
 import org.junit.jupiter.api.Test;
 import request.CreateGameRequest;
 import request.RegisterRequest;
 import result.CreateGameResult;
+import result.ListGamesResult;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,7 +48,27 @@ class GameServiceTest {
     }
 
     @Test
-    void listGamesSuccess() {
+    void listGamesSuccess() throws BadRequestException, AlreadyTakenException, UnauthorizedException {
+        String authToken = setup();
+
+        // add the first game
+        gameService.createGame(authToken, new CreateGameRequest("Game 1"));
+        gameService.createGame(authToken, new CreateGameRequest("Game 2"));
+        ListGamesResult result = gameService.listGames(authToken);
+
+        // simulate these games
+        Collection<ListGamesResult.Game> fakeResult = new ArrayList<>();
+        ListGamesResult.Game fakeGame1 = new ListGamesResult.Game(1, null, null, "Game 1");
+        ListGamesResult.Game fakeGame2 = new ListGamesResult.Game(2, null, null, "Game 2");
+        fakeResult.add(fakeGame1);
+        fakeResult.add(fakeGame2);
+        assertEquals(result, new ListGamesResult(fakeResult));
+    }
+
+    @Test
+    public void listGamesUnauthorized() throws BadRequestException, AlreadyTakenException {
+        setup();
+        assertThrows(UnauthorizedException.class, () -> gameService.listGames("bad"));
     }
 
     @Test

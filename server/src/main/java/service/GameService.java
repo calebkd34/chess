@@ -66,7 +66,6 @@ public class GameService extends Service{
                     game.gameName()
             ));
         }
-
         return new ListGamesResult(translatedGames);
     }
 
