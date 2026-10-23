@@ -5,7 +5,7 @@ import model.AuthData;
 public class MemoryAuthDAO implements AuthDAO{
 
     @Override
-    public void createAuth(AuthData authData) {
+    public void addAuth(AuthData authData) {
 
     }
 
@@ -15,12 +15,12 @@ public class MemoryAuthDAO implements AuthDAO{
     }
 
     @Override
-    public void clearAuth(AuthData authData) {
+    public void removeAuth(AuthData authData) {
 
     }
 
     @Override
-    public void clearAllAuths() {
+    public void removeAllAuths() {
 
     }
 

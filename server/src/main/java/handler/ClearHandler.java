@@ -4,27 +4,30 @@ import io.javalin.http.Context;
 import json.Serializer;
 import request.ClearRequest;
 import result.ClearResult;
-import service.BadRequestException;
 import service.ClearService;
 
 public class ClearHandler {
 
-    private final ClearService clearService;
+    private static final ClearService clearService = new ClearService();
 
-    public ClearHandler() {
-        clearService = new ClearService();
-    }
-
+    /**
+     * handles a request for to clear the database
+     *
+     * @param context the context from the serve, containing body
+     * @return the JSON body of the request result
+     */
     public String handleRequest(Context context) {
+        ClearResult result;
 
         try {
-            ClearRequest request = Serializer.fromJson(context.body(), ClearRequest.class);
-            ClearResult result = clearService.clear(request);
             context.status(200);
-            return Serializer.toJson(result);
-        } catch (Exception error) {
-            context.status(500);
-            return "{\"message\":\"Error: %s\"".formatted(error);
+            result = clearService.clear(new ClearRequest());
         }
+        // presumably runtime error
+        catch (Exception error) {
+            context.status(500);
+            result = new ClearResult("Error: %s".formatted(error));
+        }
+        return Serializer.toJson(result);
     }
 }

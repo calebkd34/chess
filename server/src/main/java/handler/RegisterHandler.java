@@ -10,30 +10,32 @@ import service.UserService;
 
 public class RegisterHandler {
 
-    private final UserService userService;
+    private static final UserService userService = new UserService();
 
-    public RegisterHandler() {
-        userService = new UserService();
-    }
-
-    public String handleRequest(Context context) {
+    public void handleRequest(Context context) {
 
         RegisterResult result;
         try {
             RegisterRequest request = Serializer.fromJson(context.body(), RegisterRequest.class);
             result = userService.register(request);
-        } catch (BadRequestException error) {
-            context.status(400);
-            result = new RegisterResult("Error: bad request");
-            return Serializer.toJson(result);
-        } catch (AlreadyTakenException error) {
-            context.status(403);
-            result = new RegisterResult("Error: already taken");
-        } catch (Exception error) {
-            context.status(500);
-            result = new RegisterResult("Error: %s".formatted(error));
+            context.status(200);
         }
-        return Serializer.toJson(result);
+        // thrown when request was invalid
+        catch (BadRequestException error) {
+            result = new RegisterResult("Error: bad request");
+            context.status(400);
+        }
+        // thrown when username is already taken
+        catch (AlreadyTakenException error) {
+            result = new RegisterResult("Error: already taken");
+            context.status(403);
+        }
+        // all other errors, likely runtime
+        catch (Exception error) {
+            result = new RegisterResult("Error: %s".formatted(error));
+            context.status(500);
+        }
+        context.result(Serializer.toJson(result));
     }
 
 }

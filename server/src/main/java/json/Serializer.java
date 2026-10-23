@@ -4,11 +4,7 @@ import com.google.gson.Gson;
 
 public class Serializer {
 
-    private static Gson serializer;
-
-    public Serializer() {
-        serializer = new Gson();
-    }
+    private static final Gson serializer = new Gson();
 
     public static <T> T fromJson(String json, Class<T> request) {
         return serializer.fromJson(json, request);
