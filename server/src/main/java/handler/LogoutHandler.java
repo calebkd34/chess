@@ -1,4 +1,40 @@
 package handler;
 
-public class LogoutHandler extends Handler{
+import io.javalin.http.Context;
+import json.Serializer;
+import request.LogoutRequest;
+import result.LogoutResult;
+import service.UnauthorizedException;
+import service.UserService;
+
+public class LogoutHandler extends Handler {
+
+    private static final UserService userService = new UserService();
+
+    /**
+     * Logs out a logged-in user
+     *
+     * @param context the http JSON body
+     */
+    public void handleRequest(Context context) {
+
+        LogoutResult result;
+        try {
+            LogoutRequest request = new LogoutRequest(context.header("authorization"));
+            System.out.println(request);
+            result = userService.logout(request);
+            context.status(200);
+        }
+        // thrown when request was invalid
+        catch (UnauthorizedException error) {
+            result = new LogoutResult("Error: unauthorized");
+            context.status(401);
+        }
+        // thrown when something went very wrong
+        catch (Exception error) {
+            result = new LogoutResult("Error: %s".formatted(error));
+            context.status(500);
+        }
+        context.result(Serializer.toJson(result));
+    }
 }

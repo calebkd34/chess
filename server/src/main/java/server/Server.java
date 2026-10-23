@@ -2,6 +2,7 @@ package server;
 
 import handler.ClearHandler;
 import handler.LoginHandler;
+import handler.LogoutHandler;
 import handler.RegisterHandler;
 import io.javalin.*;
 
@@ -25,6 +26,10 @@ public class Server {
         // login
         LoginHandler loginHandler = new LoginHandler();
         javalin.post("/session", loginHandler::handleRequest);
+
+        // logout
+        LogoutHandler logoutHandler = new LogoutHandler();
+        javalin.delete("/session", logoutHandler::handleRequest);
     }
 
     public int run(int desiredPort) {

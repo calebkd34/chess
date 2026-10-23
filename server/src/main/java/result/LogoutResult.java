@@ -1,7 +1,8 @@
 package result;
 
-public class LogoutResult {
+public record LogoutResult (String message) {
 
-    public LogoutResult(String message) {
+    public LogoutResult() {
+        this(null);
     }
 }

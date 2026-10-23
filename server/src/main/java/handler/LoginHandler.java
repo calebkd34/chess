@@ -22,7 +22,6 @@ public class LoginHandler extends Handler{
         LoginResult result;
         try {
             LoginRequest request = Serializer.fromJson(context.body(), LoginRequest.class);
-            System.out.println(request);
             result = userService.login(request);
             context.status(200);
         }

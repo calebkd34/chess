@@ -3,8 +3,10 @@ package service;
 import model.AuthData;
 import model.UserData;
 import request.LoginRequest;
+import request.LogoutRequest;
 import request.RegisterRequest;
 import result.LoginResult;
+import result.LogoutResult;
 import result.RegisterResult;
 
 import java.util.UUID;
@@ -55,7 +57,6 @@ public class UserService extends Service {
 
         // left a field blank
         if (request.username() == null || request.password() == null) {
-            System.out.println("blank field");
             throw new BadRequestException("Field cannot be left blank");
         }
 
@@ -74,5 +75,24 @@ public class UserService extends Service {
         String authToken = createAuth(request.username());
 
         return new LoginResult(request.username(), authToken);
+    }
+
+    public LogoutResult logout(LogoutRequest request) throws UnauthorizedException {
+
+        // left a field blank
+        if (request.authToken() == null) {
+            throw new UnauthorizedException("No authToken was provided");
+        }
+
+        // try to get the authToken from the db
+        AuthData auth = authDao.getAuth(request.authToken());
+        if (auth == null) {
+            throw new UnauthorizedException("The provided authToken is not associated with a user");
+        }
+
+        // log them out
+        deleteAuth(auth);
+
+        return new LogoutResult();
     }
 }
