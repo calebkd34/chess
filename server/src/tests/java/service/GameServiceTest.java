@@ -15,21 +15,21 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameServiceTest {
 
-    private static final ClearService clearService = new ClearService();
-    private static final GameService gameService = new GameService();
-    private static final UserService userService = new UserService();
+    private static final ClearService CLEAR_SERVICE = new ClearService();
+    private static final GameService GAME_SERVICE = new GameService();
+    private static final UserService USER_SERVICE = new UserService();
 
     String setup() throws BadRequestException, AlreadyTakenException {
-        clearService.clear();
+        CLEAR_SERVICE.clear();
         RegisterRequest request = new RegisterRequest("username", "password", "email");
-        return userService.register(request).authToken();
+        return USER_SERVICE.register(request).authToken();
     }
 
     @Test
     void createGameSuccess() throws BadRequestException, AlreadyTakenException, UnauthorizedException {
         String authToken = setup();
         CreateGameRequest request = new CreateGameRequest("Game 1");
-        CreateGameResult result = gameService.createGame(authToken, request);
+        CreateGameResult result = GAME_SERVICE.createGame(authToken, request);
         assertNotNull(result.gameID());
         assertNull(result.message());
     }
@@ -38,14 +38,14 @@ class GameServiceTest {
     void createGameBadRequest() throws BadRequestException, AlreadyTakenException {
         String authToken = setup();
         CreateGameRequest request = new CreateGameRequest(null);
-        assertThrows(BadRequestException.class, () -> gameService.createGame(authToken, request));
+        assertThrows(BadRequestException.class, () -> GAME_SERVICE.createGame(authToken, request));
     }
 
     @Test
     void createGameUnauthorized() throws BadRequestException, AlreadyTakenException {
         setup();
         CreateGameRequest request = new CreateGameRequest("Game 1");
-        assertThrows(UnauthorizedException.class, () -> gameService.createGame("trash", request));
+        assertThrows(UnauthorizedException.class, () -> GAME_SERVICE.createGame("trash", request));
     }
 
     @Test
@@ -53,9 +53,9 @@ class GameServiceTest {
         String authToken = setup();
 
         // add the first game
-        gameService.createGame(authToken, new CreateGameRequest("Game 1"));
-        gameService.createGame(authToken, new CreateGameRequest("Game 2"));
-        ListGamesResult result = gameService.listGames(authToken);
+        GAME_SERVICE.createGame(authToken, new CreateGameRequest("Game 1"));
+        GAME_SERVICE.createGame(authToken, new CreateGameRequest("Game 2"));
+        ListGamesResult result = GAME_SERVICE.listGames(authToken);
 
         // simulate these games
         Collection<ListGamesResult.Game> fakeResult = new ArrayList<>();
@@ -69,40 +69,40 @@ class GameServiceTest {
     @Test
     public void listGamesUnauthorized() throws BadRequestException, AlreadyTakenException {
         setup();
-        assertThrows(UnauthorizedException.class, () -> gameService.listGames("bad"));
+        assertThrows(UnauthorizedException.class, () -> GAME_SERVICE.listGames("bad"));
     }
 
     @Test
     void joinGameSuccess() throws BadRequestException, AlreadyTakenException, UnauthorizedException {
         String authToken = setup();
-        gameService.createGame(authToken, new CreateGameRequest("Game 1"));
+        GAME_SERVICE.createGame(authToken, new CreateGameRequest("Game 1"));
         JoinGameRequest request = new JoinGameRequest("WHITE", 1);
-        JoinGameResult result = gameService.joinGame(authToken, request);
+        JoinGameResult result = GAME_SERVICE.joinGame(authToken, request);
         assertNotNull(result);
     }
 
     @Test
     public void joinGameBadRequest() throws BadRequestException, AlreadyTakenException, UnauthorizedException {
         String authToken = setup();
-        gameService.createGame(authToken, new CreateGameRequest("Game 1"));
+        GAME_SERVICE.createGame(authToken, new CreateGameRequest("Game 1"));
         JoinGameRequest request = new JoinGameRequest("brown", 1);
-        assertThrows(BadRequestException.class, () -> gameService.joinGame(authToken, request));
+        assertThrows(BadRequestException.class, () -> GAME_SERVICE.joinGame(authToken, request));
     }
 
     @Test
     public void joinGameUnauthorized() throws BadRequestException, AlreadyTakenException, UnauthorizedException {
         String authToken = setup();
-        gameService.createGame(authToken, new CreateGameRequest("Game 1"));
+        GAME_SERVICE.createGame(authToken, new CreateGameRequest("Game 1"));
         JoinGameRequest request = new JoinGameRequest("BLACK", 1);
-        assertThrows(UnauthorizedException.class, () -> gameService.joinGame("dum", request));
+        assertThrows(UnauthorizedException.class, () -> GAME_SERVICE.joinGame("dum", request));
     }
 
     @Test
     public void joinGameAlreadyTaken() throws BadRequestException, AlreadyTakenException, UnauthorizedException {
         String authToken = setup();
-        gameService.createGame(authToken, new CreateGameRequest("Game 1"));
+        GAME_SERVICE.createGame(authToken, new CreateGameRequest("Game 1"));
         JoinGameRequest request = new JoinGameRequest("WHITE", 1);
-        gameService.joinGame(authToken, request);
-        assertThrows(AlreadyTakenException.class, () -> gameService.joinGame(authToken, request));
+        GAME_SERVICE.joinGame(authToken, request);
+        assertThrows(AlreadyTakenException.class, () -> GAME_SERVICE.joinGame(authToken, request));
     }
 }

@@ -7,10 +7,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ClearServiceTest {
 
-    private static final ClearService clearService = new ClearService();
+    private static final ClearService CLEAR_SERVICE = new ClearService();
 
     @Test
-    void clearSuccess() throws BadRequestException {
-        assertEquals(new ClearResult(), clearService.clear());
+    void clearSuccess() {
+        assertEquals(new ClearResult(), CLEAR_SERVICE.clear());
     }
 }

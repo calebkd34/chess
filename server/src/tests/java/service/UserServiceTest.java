@@ -14,28 +14,28 @@ class UserServiceTest {
 
     private static final ClearService CLEAR_SERVICE = new ClearService();
     private static final UserService USER_SERVICE = new UserService();
-    private static final UserData USER_DATA = new UserData(
+    private static final UserData EXISTING_USER = new UserData(
             "existingUsername",
             "existingPassword",
             "email@email.com"
     );
-    private static final UserData newUser = new UserData(
+    private static final UserData NEW_USER = new UserData(
             "caleb",
             "password",
             "me@gmail.com");
 
     public RegisterResult addExisting() throws BadRequestException, AlreadyTakenException {
         RegisterRequest request = new RegisterRequest(
-                USER_DATA.username(),
-                USER_DATA.password(),
-                USER_DATA.email());
+                EXISTING_USER.username(),
+                EXISTING_USER.password(),
+                EXISTING_USER.email());
         return USER_SERVICE.register(request);
     }
 
     @Test
     void registerSuccess() throws AlreadyTakenException, BadRequestException {
         CLEAR_SERVICE.clear();
-        RegisterRequest request = new RegisterRequest(newUser.username(), newUser.password(), newUser.email());
+        RegisterRequest request = new RegisterRequest(NEW_USER.username(), NEW_USER.password(), NEW_USER.email());
         RegisterResult result = USER_SERVICE.register(request);
         assertNotNull(result.authToken());
         assertEquals("caleb", result.username());
@@ -45,14 +45,14 @@ class UserServiceTest {
     @Test
     void registerBadRequest() {
         CLEAR_SERVICE.clear();
-        RegisterRequest request = new RegisterRequest(newUser.username(), newUser.password(), null);
+        RegisterRequest request = new RegisterRequest(NEW_USER.username(), NEW_USER.password(), null);
         assertThrows(BadRequestException.class, () -> USER_SERVICE.register(request));
     }
 
     @Test
     void registerAlreadyTaken() throws AlreadyTakenException, BadRequestException {
         CLEAR_SERVICE.clear();
-        RegisterRequest request = new RegisterRequest(newUser.username(), newUser.password(), newUser.email());
+        RegisterRequest request = new RegisterRequest(NEW_USER.username(), NEW_USER.password(), NEW_USER.email());
         USER_SERVICE.register(request);
         assertThrows(AlreadyTakenException.class, () -> USER_SERVICE.register(request));
     }
@@ -62,12 +62,12 @@ class UserServiceTest {
         CLEAR_SERVICE.clear();
         addExisting();
         LoginRequest request = new LoginRequest(
-                USER_DATA.username(),
-                USER_DATA.password()
+                EXISTING_USER.username(),
+                EXISTING_USER.password()
         );
         LoginResult result = USER_SERVICE.login(request);
         assertNotNull(result.authToken());
-        assertEquals(USER_DATA.username(), result.username());
+        assertEquals(EXISTING_USER.username(), result.username());
         assertNull(result.message());
     }
 
@@ -77,7 +77,7 @@ class UserServiceTest {
         addExisting();
         LoginRequest request = new LoginRequest(
                 null,
-                USER_DATA.password()
+                EXISTING_USER.password()
         );
         assertThrows(BadRequestException.class, () -> USER_SERVICE.login(request));
     }
@@ -86,8 +86,8 @@ class UserServiceTest {
     void loginUsernameNotExist() {
         CLEAR_SERVICE.clear();
         LoginRequest request = new LoginRequest(
-                USER_DATA.username(),
-                USER_DATA.password()
+                EXISTING_USER.username(),
+                EXISTING_USER.password()
         );
         assertThrows(UnauthorizedException.class, () -> USER_SERVICE.login(request));
     }
@@ -97,7 +97,7 @@ class UserServiceTest {
         CLEAR_SERVICE.clear();
         addExisting();
         LoginRequest request = new LoginRequest(
-                USER_DATA.username(),
+                EXISTING_USER.username(),
                 "wrongPassword"
         );
         assertThrows(UnauthorizedException.class, () -> USER_SERVICE.login(request));
