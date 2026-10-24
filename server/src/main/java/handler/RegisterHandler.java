@@ -8,9 +8,7 @@ import service.AlreadyTakenException;
 import service.BadRequestException;
 import service.UserService;
 
-public class RegisterHandler {
-
-    private static final UserService userService = new UserService();
+public class RegisterHandler extends Handler {
 
     /**
      * registers a new user

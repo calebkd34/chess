@@ -10,8 +10,11 @@ import service.UnauthorizedException;
 
 public class CreateGameHandler extends Handler {
 
-    public static final GameService gameService = new GameService();
-
+    /**
+     * Request handler for creating a game
+     *
+     * @param context the JSON request body
+     */
     public void handleRequest(Context context) {
 
         CreateGameResult result;

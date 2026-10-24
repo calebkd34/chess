@@ -36,6 +36,31 @@ public class MemoryGameDAO implements GameDAO {
     }
 
     @Override
+    public void joinGame(Integer gameID, String playerColor, String username) {
+        GameData oldGame = gameDataMap.get(gameID);
+        GameData newGame;
+        if (playerColor.equals("WHITE")) {
+            newGame = new GameData(
+                    oldGame.gameID(),
+                    username,
+                    oldGame.blackUsername(),
+                    oldGame.gameName(),
+                    oldGame.game()
+            );
+        }
+        else {
+            newGame = new GameData(
+                    oldGame.gameID(),
+                    oldGame.whiteUsername(),
+                    username,
+                    oldGame.gameName(),
+                    oldGame.game()
+            );
+        }
+        gameDataMap.put(gameID, newGame);
+    }
+
+    @Override
     public void removeGame(GameData game) {
         gameDataMap.remove(game.gameID());
     }

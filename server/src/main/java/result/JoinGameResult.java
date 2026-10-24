@@ -1,7 +1,8 @@
 package result;
 
-public class JoinGameResult {
+public record JoinGameResult(String message) {
 
-    public JoinGameResult(String message) {
+    public JoinGameResult() {
+        this(null);
     }
 }

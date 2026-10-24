@@ -5,9 +5,7 @@ import json.Serializer;
 import result.ClearResult;
 import service.ClearService;
 
-public class ClearHandler {
-
-    private static final ClearService clearService = new ClearService();
+public class ClearHandler extends Handler {
 
     /**
      * handles a request for to clear the database

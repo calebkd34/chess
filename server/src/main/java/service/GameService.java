@@ -1,7 +1,7 @@
 package service;
 
 import chess.ChessGame;
-import kotlin.NotImplementedError;
+import model.AuthData;
 import model.GameData;
 import request.CreateGameRequest;
 import request.JoinGameRequest;
@@ -12,16 +12,16 @@ import result.ListGamesResult;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class GameService extends Service{
+public class GameService extends Service {
 
     /**
      * Creates a new game with the given name.
      *
      * @param authToken proof the user is logged in
-     * @param request contains the new game name
+     * @param request   contains the new game name
      * @return JSON of new game ID
      * @throws UnauthorizedException when the authToken is wrong
-     * @throws BadRequestException when no name is given
+     * @throws BadRequestException   when no name is given
      */
     public CreateGameResult createGame(String authToken, CreateGameRequest request) throws UnauthorizedException, BadRequestException, AlreadyTakenException {
 
@@ -69,7 +69,49 @@ public class GameService extends Service{
         return new ListGamesResult(translatedGames);
     }
 
-    public JoinGameResult joinGame(String authToken, JoinGameRequest request) {
-        throw new NotImplementedError("Not implemented");
+    /**
+     * Joins a current game
+     *
+     * @param authToken the authToken
+     * @param request   contains the game id and playerColor
+     * @return an empty body
+     * @throws UnauthorizedException when the authToken is invalid
+     * @throws BadRequestException   when the game doesn't exist
+     * @throws AlreadyTakenException when the color is already taken
+     */
+    public JoinGameResult joinGame(String authToken, JoinGameRequest request) throws UnauthorizedException, BadRequestException, AlreadyTakenException {
+
+        System.out.println(request);
+
+        // check the authToken
+        AuthData authData = authDao.getAuth(authToken);
+        if (authData == null) {
+            throw new UnauthorizedException("Error: unauthorized");
+        }
+
+        // check the request
+        if (request.playerColor() == null) {
+            throw new BadRequestException("Error: missing fields");
+        }
+        if (!request.playerColor().equals("WHITE") && !request.playerColor().equals("BLACK")) {
+            throw new BadRequestException("Error: invalid playercolor");
+        }
+
+        // check if the game exists
+        GameData game = gameDao.getGame(request.gameID());
+        if (game == null) {
+            throw new BadRequestException("Error: game does not exist");
+        }
+
+        // the spot you want is taken
+        if (game.whiteUsername() != null && request.playerColor().equals("WHITE") ||
+                game.blackUsername() != null && request.playerColor().equals("BLACK")
+        ) {
+            throw new AlreadyTakenException("Error: already taken");
+        }
+
+        // join the game
+        gameDao.joinGame(request.gameID(), request.playerColor(), authData.username());
+        return new JoinGameResult();
     }
 }

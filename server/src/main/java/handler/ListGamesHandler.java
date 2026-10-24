@@ -3,12 +3,9 @@ package handler;
 import io.javalin.http.Context;
 import json.Serializer;
 import result.ListGamesResult;
-import service.GameService;
 import service.UnauthorizedException;
 
 public class ListGamesHandler extends Handler {
-
-    private static final GameService gameService = new GameService();
 
     /**
      * Request handler for listing games

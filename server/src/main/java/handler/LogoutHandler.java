@@ -9,8 +9,6 @@ import service.UserService;
 
 public class LogoutHandler extends Handler {
 
-    private static final UserService userService = new UserService();
-
     /**
      * Logs out a logged-in user
      *

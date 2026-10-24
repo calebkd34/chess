@@ -10,8 +10,6 @@ import service.UserService;
 
 public class LoginHandler extends Handler{
 
-    private static final UserService userService = new UserService();
-
     /**
      * Logs in an existing user
      *

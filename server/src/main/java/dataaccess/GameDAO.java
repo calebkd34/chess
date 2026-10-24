@@ -10,6 +10,8 @@ public interface GameDAO {
 
     GameData getGame(int gameId);
 
+    void joinGame(Integer gameID, String playerColor, String username);
+
     Collection<GameData> listGames();
 
     Integer nextGameID();
