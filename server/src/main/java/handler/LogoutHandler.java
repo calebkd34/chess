@@ -2,10 +2,8 @@ package handler;
 
 import io.javalin.http.Context;
 import json.Serializer;
-import request.LogoutRequest;
 import result.LogoutResult;
 import service.UnauthorizedException;
-import service.UserService;
 
 public class LogoutHandler extends Handler {
 

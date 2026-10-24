@@ -47,8 +47,7 @@ public class MemoryGameDAO implements GameDAO {
                     oldGame.gameName(),
                     oldGame.game()
             );
-        }
-        else {
+        } else {
             newGame = new GameData(
                     oldGame.gameID(),
                     oldGame.whiteUsername(),
@@ -58,11 +57,6 @@ public class MemoryGameDAO implements GameDAO {
             );
         }
         gameDataMap.put(gameID, newGame);
-    }
-
-    @Override
-    public void removeGame(GameData game) {
-        gameDataMap.remove(game.gameID());
     }
 
     @Override

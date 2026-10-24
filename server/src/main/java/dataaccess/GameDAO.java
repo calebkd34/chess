@@ -16,7 +16,5 @@ public interface GameDAO {
 
     Integer nextGameID();
 
-    void removeGame(GameData game);
-
     void removeAllGames();
 }

@@ -23,7 +23,7 @@ public class GameService extends Service {
      * @throws UnauthorizedException when the authToken is wrong
      * @throws BadRequestException   when no name is given
      */
-    public CreateGameResult createGame(String authToken, CreateGameRequest request) throws UnauthorizedException, BadRequestException, AlreadyTakenException {
+    public CreateGameResult createGame(String authToken, CreateGameRequest request) throws UnauthorizedException, BadRequestException {
 
         // check the request
         if (request.gameName() == null) {
@@ -81,8 +81,6 @@ public class GameService extends Service {
      */
     public JoinGameResult joinGame(String authToken, JoinGameRequest request) throws UnauthorizedException, BadRequestException, AlreadyTakenException {
 
-        System.out.println(request);
-
         // check the authToken
         AuthData authData = authDao.getAuth(authToken);
         if (authData == null) {
@@ -94,7 +92,7 @@ public class GameService extends Service {
             throw new BadRequestException("Error: missing fields");
         }
         if (!request.playerColor().equals("WHITE") && !request.playerColor().equals("BLACK")) {
-            throw new BadRequestException("Error: invalid playercolor");
+            throw new BadRequestException("Error: invalid player color");
         }
 
         // check if the game exists

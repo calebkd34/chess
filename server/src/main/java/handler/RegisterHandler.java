@@ -6,7 +6,6 @@ import request.RegisterRequest;
 import result.RegisterResult;
 import service.AlreadyTakenException;
 import service.BadRequestException;
-import service.UserService;
 
 public class RegisterHandler extends Handler {
 

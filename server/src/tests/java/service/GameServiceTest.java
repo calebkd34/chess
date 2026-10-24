@@ -1,10 +1,11 @@
 package service;
 
-import model.GameData;
 import org.junit.jupiter.api.Test;
 import request.CreateGameRequest;
+import request.JoinGameRequest;
 import request.RegisterRequest;
 import result.CreateGameResult;
+import result.JoinGameResult;
 import result.ListGamesResult;
 
 import java.util.ArrayList;
@@ -72,6 +73,36 @@ class GameServiceTest {
     }
 
     @Test
-    void joinGameSuccess() {
+    void joinGameSuccess() throws BadRequestException, AlreadyTakenException, UnauthorizedException {
+        String authToken = setup();
+        gameService.createGame(authToken, new CreateGameRequest("Game 1"));
+        JoinGameRequest request = new JoinGameRequest("WHITE", 1);
+        JoinGameResult result = gameService.joinGame(authToken, request);
+        assertNotNull(result);
+    }
+
+    @Test
+    public void joinGameBadRequest() throws BadRequestException, AlreadyTakenException, UnauthorizedException {
+        String authToken = setup();
+        gameService.createGame(authToken, new CreateGameRequest("Game 1"));
+        JoinGameRequest request = new JoinGameRequest("brown", 1);
+        assertThrows(BadRequestException.class, () -> gameService.joinGame(authToken, request));
+    }
+
+    @Test
+    public void joinGameUnauthorized() throws BadRequestException, AlreadyTakenException, UnauthorizedException {
+        String authToken = setup();
+        gameService.createGame(authToken, new CreateGameRequest("Game 1"));
+        JoinGameRequest request = new JoinGameRequest("BLACK", 1);
+        assertThrows(UnauthorizedException.class, () -> gameService.joinGame("dum", request));
+    }
+
+    @Test
+    public void joinGameAlreadyTaken() throws BadRequestException, AlreadyTakenException, UnauthorizedException {
+        String authToken = setup();
+        gameService.createGame(authToken, new CreateGameRequest("Game 1"));
+        JoinGameRequest request = new JoinGameRequest("WHITE", 1);
+        gameService.joinGame(authToken, request);
+        assertThrows(AlreadyTakenException.class, () -> gameService.joinGame(authToken, request));
     }
 }

@@ -3,7 +3,6 @@ package handler;
 import io.javalin.http.Context;
 import json.Serializer;
 import result.ClearResult;
-import service.ClearService;
 
 public class ClearHandler extends Handler {
 

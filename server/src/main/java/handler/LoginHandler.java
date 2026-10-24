@@ -6,9 +6,8 @@ import request.LoginRequest;
 import result.LoginResult;
 import service.BadRequestException;
 import service.UnauthorizedException;
-import service.UserService;
 
-public class LoginHandler extends Handler{
+public class LoginHandler extends Handler {
 
     /**
      * Logs in an existing user

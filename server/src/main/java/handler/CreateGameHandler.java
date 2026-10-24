@@ -5,7 +5,6 @@ import json.Serializer;
 import request.CreateGameRequest;
 import result.CreateGameResult;
 import service.BadRequestException;
-import service.GameService;
 import service.UnauthorizedException;
 
 public class CreateGameHandler extends Handler {
