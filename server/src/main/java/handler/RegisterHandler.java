@@ -19,7 +19,7 @@ public class RegisterHandler extends Handler {
         RegisterResult result;
         try {
             RegisterRequest request = Serializer.fromJson(context.body(), RegisterRequest.class);
-            result = userService.register(request);
+            result = USER_SERVICE.register(request);
             context.status(200);
         }
         // thrown when request was invalid

@@ -79,7 +79,8 @@ public class GameService extends Service {
      * @throws BadRequestException   when the game doesn't exist
      * @throws AlreadyTakenException when the color is already taken
      */
-    public JoinGameResult joinGame(String authToken, JoinGameRequest request) throws UnauthorizedException, BadRequestException, AlreadyTakenException {
+    public JoinGameResult joinGame(String authToken, JoinGameRequest request)
+            throws UnauthorizedException, BadRequestException, AlreadyTakenException {
 
         // check the authToken
         AuthData authData = authDao.getAuth(authToken);

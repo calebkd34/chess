@@ -3,7 +3,6 @@ package service;
 import model.UserData;
 import org.junit.jupiter.api.Test;
 import request.LoginRequest;
-import request.LogoutRequest;
 import request.RegisterRequest;
 import result.LoginResult;
 import result.LogoutResult;
@@ -13,9 +12,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceTest {
 
-    private static final ClearService clearService = new ClearService();
-    private static final UserService userService = new UserService();
-    private static final UserData existingUser = new UserData(
+    private static final ClearService CLEAR_SERVICE = new ClearService();
+    private static final UserService USER_SERVICE = new UserService();
+    private static final UserData USER_DATA = new UserData(
             "existingUsername",
             "existingPassword",
             "email@email.com"
@@ -27,94 +26,94 @@ class UserServiceTest {
 
     public RegisterResult addExisting() throws BadRequestException, AlreadyTakenException {
         RegisterRequest request = new RegisterRequest(
-                existingUser.username(),
-                existingUser.password(),
-                existingUser.email());
-        return userService.register(request);
+                USER_DATA.username(),
+                USER_DATA.password(),
+                USER_DATA.email());
+        return USER_SERVICE.register(request);
     }
 
     @Test
     void registerSuccess() throws AlreadyTakenException, BadRequestException {
-        clearService.clear();
+        CLEAR_SERVICE.clear();
         RegisterRequest request = new RegisterRequest(newUser.username(), newUser.password(), newUser.email());
-        RegisterResult result = userService.register(request);
+        RegisterResult result = USER_SERVICE.register(request);
         assertNotNull(result.authToken());
         assertEquals("caleb", result.username());
         assertNull(result.message());
     }
 
     @Test
-    void registerBadRequest() throws BadRequestException {
-        clearService.clear();
+    void registerBadRequest() {
+        CLEAR_SERVICE.clear();
         RegisterRequest request = new RegisterRequest(newUser.username(), newUser.password(), null);
-        assertThrows(BadRequestException.class, () -> userService.register(request));
+        assertThrows(BadRequestException.class, () -> USER_SERVICE.register(request));
     }
 
     @Test
     void registerAlreadyTaken() throws AlreadyTakenException, BadRequestException {
-        clearService.clear();
+        CLEAR_SERVICE.clear();
         RegisterRequest request = new RegisterRequest(newUser.username(), newUser.password(), newUser.email());
-        userService.register(request);
-        assertThrows(AlreadyTakenException.class, () -> userService.register(request));
+        USER_SERVICE.register(request);
+        assertThrows(AlreadyTakenException.class, () -> USER_SERVICE.register(request));
     }
 
     @Test
     void loginSuccess() throws BadRequestException, AlreadyTakenException, UnauthorizedException {
-        clearService.clear();
+        CLEAR_SERVICE.clear();
         addExisting();
         LoginRequest request = new LoginRequest(
-                existingUser.username(),
-                existingUser.password()
+                USER_DATA.username(),
+                USER_DATA.password()
         );
-        LoginResult result = userService.login(request);
+        LoginResult result = USER_SERVICE.login(request);
         assertNotNull(result.authToken());
-        assertEquals(existingUser.username(), result.username());
+        assertEquals(USER_DATA.username(), result.username());
         assertNull(result.message());
     }
 
     @Test
     void loginBadRequest() throws BadRequestException, AlreadyTakenException {
-        clearService.clear();
+        CLEAR_SERVICE.clear();
         addExisting();
         LoginRequest request = new LoginRequest(
                 null,
-                existingUser.password()
+                USER_DATA.password()
         );
-        assertThrows(BadRequestException.class, () -> userService.login(request));
+        assertThrows(BadRequestException.class, () -> USER_SERVICE.login(request));
     }
 
     @Test
-    void loginUsernameNotExist() throws BadRequestException {
-        clearService.clear();
+    void loginUsernameNotExist() {
+        CLEAR_SERVICE.clear();
         LoginRequest request = new LoginRequest(
-                existingUser.username(),
-                existingUser.password()
+                USER_DATA.username(),
+                USER_DATA.password()
         );
-        assertThrows(UnauthorizedException.class, () -> userService.login(request));
+        assertThrows(UnauthorizedException.class, () -> USER_SERVICE.login(request));
     }
 
     @Test
     void loginWrongPassword() throws BadRequestException, AlreadyTakenException {
-        clearService.clear();
+        CLEAR_SERVICE.clear();
         addExisting();
         LoginRequest request = new LoginRequest(
-                existingUser.username(),
+                USER_DATA.username(),
                 "wrongPassword"
         );
-        assertThrows(UnauthorizedException.class, () -> userService.login(request));
+        assertThrows(UnauthorizedException.class, () -> USER_SERVICE.login(request));
     }
 
     @Test
     void logoutSuccess() throws BadRequestException, AlreadyTakenException, UnauthorizedException {
-        clearService.clear();
+        CLEAR_SERVICE.clear();
         String authToken = addExisting().authToken();
-        assertEquals(new LogoutResult(), userService.logout(authToken));
+        assertEquals(new LogoutResult(), USER_SERVICE.logout(authToken));
     }
 
     @Test
-    void logoutUnauthorized() throws BadRequestException {
-        clearService.clear();
-        assertThrows(UnauthorizedException.class, () -> userService.logout("hello world"));
+    void logoutUnauthorized() {
+        CLEAR_SERVICE.clear();
+        assertThrows(UnauthorizedException.class, () -> USER_SERVICE.logout("hello world"));
     }
 
 }

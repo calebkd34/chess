@@ -17,7 +17,7 @@ public class ListGamesHandler extends Handler {
         ListGamesResult result;
         try {
             String authToken = context.header("authorization");
-            result = gameService.listGames(authToken);
+            result = GAME_SERVICE.listGames(authToken);
             context.status(200);
         }
         // throws when authToken is bad

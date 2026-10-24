@@ -21,7 +21,7 @@ public class JoinGameHandler extends Handler{
         try {
             String authToken = context.header("authorization");
             JoinGameRequest request = Serializer.fromJson(context.body(), JoinGameRequest.class);
-            result = gameService.joinGame(authToken, request);
+            result = GAME_SERVICE.joinGame(authToken, request);
             context.status(200);
         }
         // bad request

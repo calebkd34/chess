@@ -7,25 +7,20 @@ import java.util.Map;
 
 public class MemoryUserDAO implements UserDAO {
 
-    private static final Map<String, UserData> userDataMap = new HashMap<>();
+    private static final Map<String, UserData> USER_DATA_MAP = new HashMap<>();
 
     @Override
     public void createUser(UserData user) {
-        userDataMap.put(user.username(), user);
+        USER_DATA_MAP.put(user.username(), user);
     }
 
     @Override
     public UserData getUser(String username) {
-        return userDataMap.getOrDefault(username, null);
-    }
-
-    @Override
-    public void removeUser(UserData user) {
-        userDataMap.remove(user.username());
+        return USER_DATA_MAP.getOrDefault(username, null);
     }
 
     @Override
     public void removeAllUsers() {
-    userDataMap.clear();
+    USER_DATA_MAP.clear();
     }
 }

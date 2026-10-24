@@ -19,7 +19,7 @@ public class LoginHandler extends Handler {
         LoginResult result;
         try {
             LoginRequest request = Serializer.fromJson(context.body(), LoginRequest.class);
-            result = userService.login(request);
+            result = USER_SERVICE.login(request);
             context.status(200);
         }
         // thrown when request was invalid

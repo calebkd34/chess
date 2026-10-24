@@ -16,7 +16,7 @@ public class ClearHandler extends Handler {
 
         try {
             context.status(200);
-            result = clearService.clear();
+            result = CLEAR_SERVICE.clear();
         }
         // presumably runtime error
         catch (Exception error) {

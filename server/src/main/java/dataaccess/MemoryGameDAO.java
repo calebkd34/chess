@@ -10,34 +10,34 @@ import static java.util.Collections.max;
 
 public class MemoryGameDAO implements GameDAO {
 
-    private static final Map<Integer, GameData> gameDataMap = new HashMap<>();
+    private static final Map<Integer, GameData> GAME_DATA_MAP = new HashMap<>();
 
     @Override
     public void createGame(GameData game) {
-        gameDataMap.put(game.gameID(), game);
+        GAME_DATA_MAP.put(game.gameID(), game);
     }
 
     @Override
     public GameData getGame(int gameID) {
-        return gameDataMap.get(gameID);
+        return GAME_DATA_MAP.get(gameID);
     }
 
     @Override
     public Collection<GameData> listGames() {
-        return gameDataMap.values();
+        return GAME_DATA_MAP.values();
     }
 
     @Override
     public Integer nextGameID() {
-        if (gameDataMap.isEmpty()) {
+        if (GAME_DATA_MAP.isEmpty()) {
             return 1;
         }
-        return max(gameDataMap.keySet()) + 1;
+        return max(GAME_DATA_MAP.keySet()) + 1;
     }
 
     @Override
     public void joinGame(Integer gameID, String playerColor, String username) {
-        GameData oldGame = gameDataMap.get(gameID);
+        GameData oldGame = GAME_DATA_MAP.get(gameID);
         GameData newGame;
         if (playerColor.equals("WHITE")) {
             newGame = new GameData(
@@ -56,12 +56,12 @@ public class MemoryGameDAO implements GameDAO {
                     oldGame.game()
             );
         }
-        gameDataMap.put(gameID, newGame);
+        GAME_DATA_MAP.put(gameID, newGame);
     }
 
     @Override
     public void removeAllGames() {
-        gameDataMap.clear();
+        GAME_DATA_MAP.clear();
     }
 
 }

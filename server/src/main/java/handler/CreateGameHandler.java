@@ -20,7 +20,7 @@ public class CreateGameHandler extends Handler {
         try {
             CreateGameRequest request = Serializer.fromJson(context.body(), CreateGameRequest.class);
             String authToken = context.header("authorization");
-            result = gameService.createGame(authToken, request);
+            result = GAME_SERVICE.createGame(authToken, request);
             context.status(200);
         }
         // throws if bad request
