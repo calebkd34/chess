@@ -4,6 +4,7 @@ import model.AuthData;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class MySQLAuthDAO implements AuthDAO {
@@ -29,18 +30,40 @@ public class MySQLAuthDAO implements AuthDAO {
     @Override
     public void removeAuth(AuthData authData) throws DataAccessException {
         String statement = "DELETE FROM auth WHERE token=?";
-
+        try (Connection connection = DatabaseManager.getConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+                preparedStatement.setString(1, authData.authToken());
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException error) {
+            throw new DataAccessException("Unable to remove authData: %s".formatted(error.getMessage()));
+        }
     }
 
     @Override
     public void removeAllAuths() throws DataAccessException {
-        String statement = "DELETE * FROM auth";
-
+        String statement = "TRUNCATE auth";
+        try (Connection connection = DatabaseManager.getConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException error) {
+            throw new DataAccessException("Unable to remove authData: %s".formatted(error.getMessage()));
+        }
     }
 
     @Override
-    public AuthData getAuth(String authToken) {
-        return null;
+    public AuthData getAuth(String authToken) throws DataAccessException {
+        String statement = "SELECT FROM auth WHERE token=?";
+        try (Connection connection = DatabaseManager.getConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+                preparedStatement.setString(1, authToken);
+                ResultSet result = preparedStatement.executeQuery();
+                return new AuthData(result.getString(1), result.getString(2));
+            }
+        } catch (SQLException error) {
+            throw new DataAccessException("Unable to remove authData: %s".formatted(error.getMessage()));
+        }
     }
 
     private final String[] createStatements = {
