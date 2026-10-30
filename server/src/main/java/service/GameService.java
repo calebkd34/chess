@@ -1,6 +1,7 @@
 package service;
 
 import chess.ChessGame;
+import dataaccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
 import request.CreateGameRequest;
@@ -23,7 +24,7 @@ public class GameService extends Service {
      * @throws UnauthorizedException when the authToken is wrong
      * @throws BadRequestException   when no name is given
      */
-    public CreateGameResult createGame(String authToken, CreateGameRequest request) throws UnauthorizedException, BadRequestException {
+    public CreateGameResult createGame(String authToken, CreateGameRequest request) throws UnauthorizedException, BadRequestException, DataAccessException {
 
         // check the request
         if (request.gameName() == null) {
@@ -49,7 +50,7 @@ public class GameService extends Service {
      * @return a list of the current games
      * @throws UnauthorizedException thrown when authToken is incorrect
      */
-    public ListGamesResult listGames(String authToken) throws UnauthorizedException {
+    public ListGamesResult listGames(String authToken) throws UnauthorizedException, DataAccessException {
 
         // check the authToken
         if (authDao.getAuth(authToken) == null) {
@@ -80,7 +81,7 @@ public class GameService extends Service {
      * @throws AlreadyTakenException when the color is already taken
      */
     public JoinGameResult joinGame(String authToken, JoinGameRequest request)
-            throws UnauthorizedException, BadRequestException, AlreadyTakenException {
+            throws UnauthorizedException, BadRequestException, AlreadyTakenException, DataAccessException {
 
         // check the authToken
         AuthData authData = authDao.getAuth(authToken);

@@ -1,5 +1,6 @@
 package service;
 
+import dataaccess.DataAccessException;
 import result.ClearResult;
 
 public class ClearService extends Service {
@@ -9,7 +10,7 @@ public class ClearService extends Service {
      *
      * @return empty body
      */
-    public ClearResult clear() {
+    public ClearResult clear() throws DataAccessException {
 
         userDao.removeAllUsers();
         gameDao.removeAllGames();

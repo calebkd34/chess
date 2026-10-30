@@ -1,5 +1,6 @@
 package service;
 
+import dataaccess.DataAccessException;
 import org.junit.jupiter.api.Test;
 import result.ClearResult;
 
@@ -10,7 +11,7 @@ class ClearServiceTest {
     private static final ClearService CLEAR_SERVICE = new ClearService();
 
     @Test
-    void clearSuccess() {
+    void clearSuccess() throws DataAccessException {
         assertEquals(new ClearResult(), CLEAR_SERVICE.clear());
     }
 }

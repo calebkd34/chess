@@ -1,5 +1,6 @@
 package service;
 
+import dataaccess.DataAccessException;
 import model.UserData;
 import org.junit.jupiter.api.Test;
 import request.LoginRequest;
@@ -33,7 +34,7 @@ class UserServiceTest {
     }
 
     @Test
-    void registerSuccess() throws AlreadyTakenException, BadRequestException {
+    void registerSuccess() throws AlreadyTakenException, BadRequestException, DataAccessException {
         CLEAR_SERVICE.clear();
         RegisterRequest request = new RegisterRequest(NEW_USER.username(), NEW_USER.password(), NEW_USER.email());
         RegisterResult result = USER_SERVICE.register(request);
@@ -43,14 +44,14 @@ class UserServiceTest {
     }
 
     @Test
-    void registerBadRequest() {
+    void registerBadRequest() throws DataAccessException {
         CLEAR_SERVICE.clear();
         RegisterRequest request = new RegisterRequest(NEW_USER.username(), NEW_USER.password(), null);
         assertThrows(BadRequestException.class, () -> USER_SERVICE.register(request));
     }
 
     @Test
-    void registerAlreadyTaken() throws AlreadyTakenException, BadRequestException {
+    void registerAlreadyTaken() throws AlreadyTakenException, BadRequestException, DataAccessException {
         CLEAR_SERVICE.clear();
         RegisterRequest request = new RegisterRequest(NEW_USER.username(), NEW_USER.password(), NEW_USER.email());
         USER_SERVICE.register(request);
@@ -58,7 +59,7 @@ class UserServiceTest {
     }
 
     @Test
-    void loginSuccess() throws BadRequestException, AlreadyTakenException, UnauthorizedException {
+    void loginSuccess() throws BadRequestException, AlreadyTakenException, UnauthorizedException, DataAccessException {
         CLEAR_SERVICE.clear();
         addExisting();
         LoginRequest request = new LoginRequest(
@@ -72,7 +73,7 @@ class UserServiceTest {
     }
 
     @Test
-    void loginBadRequest() throws BadRequestException, AlreadyTakenException {
+    void loginBadRequest() throws BadRequestException, AlreadyTakenException, DataAccessException {
         CLEAR_SERVICE.clear();
         addExisting();
         LoginRequest request = new LoginRequest(
@@ -83,7 +84,7 @@ class UserServiceTest {
     }
 
     @Test
-    void loginUsernameNotExist() {
+    void loginUsernameNotExist() throws DataAccessException{
         CLEAR_SERVICE.clear();
         LoginRequest request = new LoginRequest(
                 EXISTING_USER.username(),
@@ -93,7 +94,7 @@ class UserServiceTest {
     }
 
     @Test
-    void loginWrongPassword() throws BadRequestException, AlreadyTakenException {
+    void loginWrongPassword() throws BadRequestException, AlreadyTakenException, DataAccessException {
         CLEAR_SERVICE.clear();
         addExisting();
         LoginRequest request = new LoginRequest(
@@ -104,14 +105,14 @@ class UserServiceTest {
     }
 
     @Test
-    void logoutSuccess() throws BadRequestException, AlreadyTakenException, UnauthorizedException {
+    void logoutSuccess() throws BadRequestException, AlreadyTakenException, UnauthorizedException, DataAccessException {
         CLEAR_SERVICE.clear();
         String authToken = addExisting().authToken();
         assertEquals(new LogoutResult(), USER_SERVICE.logout(authToken));
     }
 
     @Test
-    void logoutUnauthorized() {
+    void logoutUnauthorized() throws DataAccessException {
         CLEAR_SERVICE.clear();
         assertThrows(UnauthorizedException.class, () -> USER_SERVICE.logout("hello world"));
     }

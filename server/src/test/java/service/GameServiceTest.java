@@ -1,5 +1,6 @@
 package service;
 
+import dataaccess.DataAccessException;
 import org.junit.jupiter.api.Test;
 import request.CreateGameRequest;
 import request.JoinGameRequest;
@@ -19,7 +20,7 @@ class GameServiceTest {
     private static final GameService GAME_SERVICE = new GameService();
     private static final UserService USER_SERVICE = new UserService();
 
-    String setup() throws BadRequestException, AlreadyTakenException {
+    String setup() throws BadRequestException, AlreadyTakenException, DataAccessException {
         CLEAR_SERVICE.clear();
         RegisterRequest request = new RegisterRequest("username", "password", "email");
         return USER_SERVICE.register(request).authToken();
@@ -73,7 +74,7 @@ class GameServiceTest {
     }
 
     @Test
-    void joinGameSuccess() throws BadRequestException, AlreadyTakenException, UnauthorizedException {
+    void joinGameSuccess() throws BadRequestException, AlreadyTakenException, UnauthorizedException, DataAccessException {
         String authToken = setup();
         GAME_SERVICE.createGame(authToken, new CreateGameRequest("Game 1"));
         JoinGameRequest request = new JoinGameRequest("WHITE", 1);
@@ -98,7 +99,7 @@ class GameServiceTest {
     }
 
     @Test
-    public void joinGameAlreadyTaken() throws BadRequestException, AlreadyTakenException, UnauthorizedException {
+    public void joinGameAlreadyTaken() throws BadRequestException, AlreadyTakenException, UnauthorizedException, DataAccessException {
         String authToken = setup();
         GAME_SERVICE.createGame(authToken, new CreateGameRequest("Game 1"));
         JoinGameRequest request = new JoinGameRequest("WHITE", 1);

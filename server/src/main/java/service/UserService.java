@@ -1,5 +1,6 @@
 package service;
 
+import dataaccess.DataAccessException;
 import model.AuthData;
 import model.UserData;
 import request.LoginRequest;
@@ -21,7 +22,7 @@ public class UserService extends Service {
      * @throws AlreadyTakenException when the username is already taken
      * @throws BadRequestException when any field is left blank
      */
-    public RegisterResult register(RegisterRequest request) throws AlreadyTakenException, BadRequestException {
+    public RegisterResult register(RegisterRequest request) throws AlreadyTakenException, BadRequestException, DataAccessException {
 
         // left a field blank
         if (request.username() == null || request.password() == null || request.email() == null) {
@@ -53,7 +54,7 @@ public class UserService extends Service {
      * @throws BadRequestException when any fields are left blank
      * @throws UnauthorizedException when username or password is incorrect
      */
-    public LoginResult login(LoginRequest request) throws BadRequestException, UnauthorizedException {
+    public LoginResult login(LoginRequest request) throws BadRequestException, UnauthorizedException, DataAccessException {
 
         // left a field blank
         if (request.username() == null || request.password() == null) {
@@ -84,7 +85,7 @@ public class UserService extends Service {
      * @return an empty body
      * @throws UnauthorizedException when the authToken is wrong or missing
      */
-    public LogoutResult logout(String authToken) throws UnauthorizedException {
+    public LogoutResult logout(String authToken) throws UnauthorizedException, DataAccessException {
 
         // try to get the authToken from the db
         AuthData auth = authDao.getAuth(authToken);
