@@ -9,8 +9,12 @@ import java.sql.SQLException;
 
 public class MySQLAuthDAO implements AuthDAO {
 
-    public MySQLAuthDAO() throws DataAccessException {
-        configureDatabase();
+    public MySQLAuthDAO() {
+        try {
+            configureDatabase();
+        } catch (DataAccessException error) {
+            System.out.println(error.getMessage());
+        }
     }
 
     @Override
@@ -54,12 +58,16 @@ public class MySQLAuthDAO implements AuthDAO {
 
     @Override
     public AuthData getAuth(String authToken) throws DataAccessException {
-        String statement = "SELECT FROM auth WHERE token=?";
+        String statement = "SELECT * FROM auth WHERE token=?";
         try (Connection connection = DatabaseManager.getConnection()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
                 preparedStatement.setString(1, authToken);
                 ResultSet result = preparedStatement.executeQuery();
-                return new AuthData(result.getString(1), result.getString(2));
+                if (result.next()) {
+                    return new AuthData(result.getString(1), result.getString(2));
+                } else {
+                    return null;
+                }
             }
         } catch (SQLException error) {
             throw new DataAccessException("Unable to remove authData: %s".formatted(error.getMessage()));
@@ -72,8 +80,8 @@ public class MySQLAuthDAO implements AuthDAO {
             `token` varchar(256) NOT NULL,
             `username` varchar(256) NOT NULL,
             PRIMARY KEY (`token`),
-            INDEX(username),
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_ai_ci
+            INDEX(username)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """
     };
 

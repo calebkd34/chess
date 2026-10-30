@@ -3,7 +3,6 @@ package service;
 import dataaccess.*;
 import model.AuthData;
 
-import javax.xml.crypto.Data;
 import java.util.UUID;
 
 public class Service {
@@ -11,7 +10,7 @@ public class Service {
     // data access
     public static UserDAO userDao = new MemoryUserDAO();
     public static GameDAO gameDao = new MemoryGameDAO();
-    public static AuthDAO authDao = new MemoryAuthDAO();
+    public static AuthDAO authDao = new MySQLAuthDAO();
 
     /**
      * Adds the authToken to the database connected to the username and returns it

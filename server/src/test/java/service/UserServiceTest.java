@@ -25,7 +25,7 @@ class UserServiceTest {
             "password",
             "me@gmail.com");
 
-    public RegisterResult addExisting() throws BadRequestException, AlreadyTakenException {
+    public RegisterResult addExisting() throws BadRequestException, AlreadyTakenException, DataAccessException {
         RegisterRequest request = new RegisterRequest(
                 EXISTING_USER.username(),
                 EXISTING_USER.password(),

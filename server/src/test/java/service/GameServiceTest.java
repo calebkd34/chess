@@ -27,7 +27,7 @@ class GameServiceTest {
     }
 
     @Test
-    void createGameSuccess() throws BadRequestException, AlreadyTakenException, UnauthorizedException {
+    void createGameSuccess() throws BadRequestException, AlreadyTakenException, UnauthorizedException, DataAccessException {
         String authToken = setup();
         CreateGameRequest request = new CreateGameRequest("Game 1");
         CreateGameResult result = GAME_SERVICE.createGame(authToken, request);
@@ -36,21 +36,21 @@ class GameServiceTest {
     }
 
     @Test
-    void createGameBadRequest() throws BadRequestException, AlreadyTakenException {
+    void createGameBadRequest() throws BadRequestException, AlreadyTakenException, DataAccessException {
         String authToken = setup();
         CreateGameRequest request = new CreateGameRequest(null);
         assertThrows(BadRequestException.class, () -> GAME_SERVICE.createGame(authToken, request));
     }
 
     @Test
-    void createGameUnauthorized() throws BadRequestException, AlreadyTakenException {
+    void createGameUnauthorized() throws BadRequestException, AlreadyTakenException, DataAccessException {
         setup();
         CreateGameRequest request = new CreateGameRequest("Game 1");
         assertThrows(UnauthorizedException.class, () -> GAME_SERVICE.createGame("trash", request));
     }
 
     @Test
-    void listGamesSuccess() throws BadRequestException, AlreadyTakenException, UnauthorizedException {
+    void listGamesSuccess() throws BadRequestException, AlreadyTakenException, UnauthorizedException, DataAccessException {
         String authToken = setup();
 
         // add the first game
@@ -68,7 +68,7 @@ class GameServiceTest {
     }
 
     @Test
-    public void listGamesUnauthorized() throws BadRequestException, AlreadyTakenException {
+    public void listGamesUnauthorized() throws BadRequestException, AlreadyTakenException, DataAccessException {
         setup();
         assertThrows(UnauthorizedException.class, () -> GAME_SERVICE.listGames("bad"));
     }
@@ -83,7 +83,7 @@ class GameServiceTest {
     }
 
     @Test
-    public void joinGameBadRequest() throws BadRequestException, AlreadyTakenException, UnauthorizedException {
+    public void joinGameBadRequest() throws BadRequestException, AlreadyTakenException, UnauthorizedException, DataAccessException {
         String authToken = setup();
         GAME_SERVICE.createGame(authToken, new CreateGameRequest("Game 1"));
         JoinGameRequest request = new JoinGameRequest("brown", 1);
@@ -91,7 +91,7 @@ class GameServiceTest {
     }
 
     @Test
-    public void joinGameUnauthorized() throws BadRequestException, AlreadyTakenException, UnauthorizedException {
+    public void joinGameUnauthorized() throws BadRequestException, AlreadyTakenException, UnauthorizedException, DataAccessException {
         String authToken = setup();
         GAME_SERVICE.createGame(authToken, new CreateGameRequest("Game 1"));
         JoinGameRequest request = new JoinGameRequest("BLACK", 1);
