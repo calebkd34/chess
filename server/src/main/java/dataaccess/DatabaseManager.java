@@ -1,6 +1,9 @@
 package dataaccess;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Properties;
 
 public class DatabaseManager {
@@ -73,5 +76,18 @@ public class DatabaseManager {
         var host = props.getProperty("db.host");
         var port = Integer.parseInt(props.getProperty("db.port"));
         connectionUrl = String.format("jdbc:mysql://%s:%d", host, port);
+    }
+
+    public static void configureDatabase(String[] statements) throws DataAccessException {
+        createDatabase();
+        try (Connection connection = DatabaseManager.getConnection()) {
+            for (String statement : statements) {
+                try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+                    preparedStatement.executeUpdate();
+                }
+            }
+        } catch (SQLException error) {
+            throw new DataAccessException("Unable to configure database: %s".formatted(error.getMessage()));
+        }
     }
 }

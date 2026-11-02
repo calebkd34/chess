@@ -10,7 +10,7 @@ public class MemoryUserDAO implements UserDAO {
     private static final Map<String, UserData> USER_DATA_MAP = new HashMap<>();
 
     @Override
-    public void createUser(UserData user) {
+    public void addUser(UserData user) {
         USER_DATA_MAP.put(user.username(), user);
     }
 

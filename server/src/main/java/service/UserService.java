@@ -36,7 +36,7 @@ public class UserService extends Service {
 
         // create new userdata
         UserData userData = new UserData(request.username(), request.password(), request.email());
-        userDao.createUser(userData);
+        userDao.addUser(userData);
 
         // create authToken and add it to the database
         String authToken = createAuth(request.username());
@@ -95,7 +95,6 @@ public class UserService extends Service {
 
         // log them out
         deleteAuth(auth);
-
         return new LogoutResult();
     }
 }

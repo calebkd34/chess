@@ -8,7 +8,7 @@ import java.util.UUID;
 public class Service {
 
     // data access
-    public static UserDAO userDao = new MemoryUserDAO();
+    public static UserDAO userDao = new MySQLUserDAO();
     public static GameDAO gameDao = new MemoryGameDAO();
     public static AuthDAO authDao = new MySQLAuthDAO();
 

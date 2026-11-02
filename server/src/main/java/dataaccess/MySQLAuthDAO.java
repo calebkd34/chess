@@ -11,7 +11,17 @@ public class MySQLAuthDAO implements AuthDAO {
 
     public MySQLAuthDAO() {
         try {
-            configureDatabase();
+            String[] createStatements = {
+                    """
+            CREATE TABLE IF NOT EXISTS auth (
+            `token` varchar(256) NOT NULL,
+            `username` varchar(256) NOT NULL,
+            PRIMARY KEY (`token`),
+            INDEX(username)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+            """
+            };
+            DatabaseManager.configureDatabase(createStatements);
         } catch (DataAccessException error) {
             System.out.println(error.getMessage());
         }
@@ -71,30 +81,6 @@ public class MySQLAuthDAO implements AuthDAO {
             }
         } catch (SQLException error) {
             throw new DataAccessException("Unable to remove authData: %s".formatted(error.getMessage()));
-        }
-    }
-
-    private final String[] createStatements = {
-            """
-            CREATE TABLE IF NOT EXISTS auth (
-            `token` varchar(256) NOT NULL,
-            `username` varchar(256) NOT NULL,
-            PRIMARY KEY (`token`),
-            INDEX(username)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-            """
-    };
-
-    private void configureDatabase() throws DataAccessException {
-        DatabaseManager.createDatabase();
-        try (Connection connection = DatabaseManager.getConnection()) {
-            for (String statement : createStatements) {
-                try (var preparedStatement = connection.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
-                }
-            }
-        } catch (SQLException error) {
-            throw new DataAccessException("Unable to configure database: %s".formatted(error.getMessage()));
         }
     }
 }
