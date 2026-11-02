@@ -1,6 +1,9 @@
 package service;
 
 import dataaccess.*;
+import dataaccess.sql.MySQLAuthDAO;
+import dataaccess.sql.MySQLGameDAO;
+import dataaccess.sql.MySQLUserDAO;
 import model.AuthData;
 
 import java.util.UUID;
