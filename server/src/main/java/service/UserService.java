@@ -5,13 +5,11 @@ import model.AuthData;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 import request.LoginRequest;
-import request.LogoutRequest;
 import request.RegisterRequest;
 import result.LoginResult;
 import result.LogoutResult;
 import result.RegisterResult;
 
-import java.util.UUID;
 
 public class UserService extends Service {
 
@@ -21,7 +19,7 @@ public class UserService extends Service {
      * @param request contains the username, email and password to register with
      * @return the username and authToken created
      * @throws AlreadyTakenException when the username is already taken
-     * @throws BadRequestException when any field is left blank
+     * @throws BadRequestException   when any field is left blank
      */
     public RegisterResult register(RegisterRequest request) throws AlreadyTakenException, BadRequestException, DataAccessException {
 
@@ -52,7 +50,7 @@ public class UserService extends Service {
      *
      * @param request the object containing username, password, email
      * @return LoginResult object containing username and authToken
-     * @throws BadRequestException when any fields are left blank
+     * @throws BadRequestException   when any fields are left blank
      * @throws UnauthorizedException when username or password is incorrect
      */
     public LoginResult login(LoginRequest request) throws BadRequestException, UnauthorizedException, DataAccessException {

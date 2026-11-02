@@ -9,7 +9,7 @@ public class Service {
 
     // data access
     public static UserDAO userDao = new MySQLUserDAO();
-    public static GameDAO gameDao = new MemoryGameDAO();
+    public static GameDAO gameDao = new MySQLGameDAO();
     public static AuthDAO authDao = new MySQLAuthDAO();
 
     /**

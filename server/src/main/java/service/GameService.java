@@ -39,7 +39,7 @@ public class GameService extends Service {
         // create the game
         Integer gameID = gameDao.nextGameID();
         GameData game = new GameData(gameID, null, null, request.gameName(), new ChessGame());
-        gameDao.createGame(game);
+        gameDao.addGame(game);
         return new CreateGameResult(game.gameID());
     }
 

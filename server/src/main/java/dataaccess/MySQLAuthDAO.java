@@ -13,13 +13,13 @@ public class MySQLAuthDAO implements AuthDAO {
         try {
             String[] createStatements = {
                     """
-            CREATE TABLE IF NOT EXISTS auth (
-            `token` varchar(256) NOT NULL,
-            `username` varchar(256) NOT NULL,
-            PRIMARY KEY (`token`),
-            INDEX(username)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-            """
+                    CREATE TABLE IF NOT EXISTS auth (
+                    `token` varchar(256) NOT NULL,
+                    `username` varchar(256) NOT NULL,
+                    PRIMARY KEY (`token`),
+                    INDEX(`username`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+                    """
             };
             DatabaseManager.configureDatabase(createStatements);
         } catch (DataAccessException error) {
