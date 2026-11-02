@@ -5,6 +5,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class MySQLUserDAO implements UserDAO {
@@ -29,7 +30,7 @@ public class MySQLUserDAO implements UserDAO {
 
     @Override
     public void addUser(UserData user) throws DataAccessException {
-        String statement = "INSERT INTO user (username, password, email VALUES (?, ?, ?)";
+        String statement = "INSERT INTO user (username, password, email) VALUES (?, ?, ?)";
         try (Connection connection = DatabaseManager.getConnection()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
                 preparedStatement.setString(1, user.username());
@@ -44,7 +45,20 @@ public class MySQLUserDAO implements UserDAO {
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
-        return null;
+        String statement = "SELECT * FROM user WHERE username=?";
+        try (Connection connection = DatabaseManager.getConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+                preparedStatement.setString(1, username);
+                ResultSet result = preparedStatement.executeQuery();
+                if (result.next()) {
+                    return new UserData(result.getString(1), result.getString(2), result.getString(3));
+                } else {
+                    return null;
+                }
+            }
+        } catch (SQLException error) {
+            throw new DataAccessException("Unable to get userData: %s".formatted(error.getMessage()));
+        }
     }
 
     @Override
