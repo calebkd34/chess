@@ -24,7 +24,8 @@ public class GameService extends Service {
      * @throws UnauthorizedException when the authToken is wrong
      * @throws BadRequestException   when no name is given
      */
-    public CreateGameResult createGame(String authToken, CreateGameRequest request) throws UnauthorizedException, BadRequestException, DataAccessException {
+    public CreateGameResult createGame(String authToken, CreateGameRequest request) throws
+            UnauthorizedException, BadRequestException, DataAccessException {
 
         // check the request
         if (request.gameName() == null) {
