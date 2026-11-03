@@ -6,6 +6,8 @@ import dataaccess.GameDAO;
 import model.GameData;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class MySQLGameDAOTest {
 
     @Test
@@ -13,8 +15,9 @@ class MySQLGameDAOTest {
         // setup
         GameDAO gameDao = new MySQLGameDAO();
         ChessGame game = new ChessGame();
-        GameData gameData = new GameData(1, null, null, "Game 1", game);
+        GameData gameData = new GameData(gameDao.nextGameID(), null, null, "Game 1", game);
         gameDao.addGame(gameData);
+        assertEquals(gameData, gameDao.getGame(gameData.gameID()));
         gameDao.listGames();
         ChessGame simulatedGame = gameDao.getGame(1).game();
 
