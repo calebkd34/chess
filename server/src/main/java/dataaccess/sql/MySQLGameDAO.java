@@ -5,7 +5,6 @@ import dataaccess.DatabaseManager;
 import dataaccess.GameDAO;
 import json.Serializer;
 import model.GameData;
-import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -84,45 +83,6 @@ public class MySQLGameDAO implements GameDAO {
     }
 
     @Override
-    public void joinGame(Integer gameID, String playerColor, String username) throws DataAccessException {
-        GameData oldGame = getGame(gameID);
-        GameData updatedGame = updateGame(playerColor, username, oldGame);
-        String statement = "UPDATE games SET gameData=? WHERE gameID=?";
-        try (Connection connection = DatabaseManager.getConnection()) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
-                preparedStatement.setString(1, Serializer.toJson(updatedGame));
-                preparedStatement.setInt(2, updatedGame.gameID());
-                preparedStatement.executeUpdate();
-            }
-        } catch (SQLException error) {
-            throw new DataAccessException("Unable to join game: %s".formatted(error.getMessage()));
-        }
-    }
-
-    @NotNull
-    private static GameData updateGame(String playerColor, String username, GameData oldGame) {
-        GameData updatedGame;
-        if (playerColor.equals("WHITE")) {
-            updatedGame = new GameData(
-                    oldGame.gameID(),
-                    username,
-                    oldGame.blackUsername(),
-                    oldGame.gameName(),
-                    oldGame.game()
-            );
-        } else {
-            updatedGame = new GameData(
-                    oldGame.gameID(),
-                    oldGame.whiteUsername(),
-                    username,
-                    oldGame.gameName(),
-                    oldGame.game()
-            );
-        }
-        return updatedGame;
-    }
-
-    @Override
     public Collection<GameData> listGames() throws DataAccessException {
         Collection<GameData> games = new ArrayList<>();
         String statement = "SELECT gameData FROM games";
@@ -148,6 +108,20 @@ public class MySQLGameDAO implements GameDAO {
             }
         } catch (SQLException error) {
             throw new DataAccessException("Unable to remove game: %s".formatted(error.getMessage()));
+        }
+    }
+
+    @Override
+    public void updateGame(GameData game) throws DataAccessException {
+        String statement = "UPDATE games SET gameData=? WHERE gameID=?";
+        try (Connection connection = DatabaseManager.getConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+                preparedStatement.setString(1, Serializer.toJson(game));
+                preparedStatement.setInt(2, game.gameID());
+                preparedStatement.executeUpdate();
+            }
+        } catch(SQLException error) {
+            throw new DataAccessException("Unable to update game: %s".formatted(error.getMessage()));
         }
     }
 }

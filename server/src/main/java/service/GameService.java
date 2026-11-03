@@ -111,8 +111,19 @@ public class GameService extends Service {
             throw new AlreadyTakenException("Error: already taken");
         }
 
-        // join the game
-        gameDao.joinGame(request.gameID(), request.playerColor(), authData.username());
+        // edit the game to have your username
+        String whiteUsername;
+        String blackUsername;
+        if (request.playerColor().equals("WHITE")) {
+            whiteUsername = authData.username();
+            blackUsername = game.blackUsername();
+        } else {
+            whiteUsername = game.whiteUsername();
+            blackUsername = authData.username();
+        }
+        
+        GameData updatedGame = new GameData(game.gameID(), whiteUsername, blackUsername, game.gameName(), game.game());
+        gameDao.updateGame(updatedGame);
         return new JoinGameResult();
     }
 }
