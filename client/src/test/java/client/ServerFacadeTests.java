@@ -13,10 +13,11 @@ public class ServerFacadeTests {
     private static ServerFacade serverFacade;
 
     @BeforeAll
-    public static void init() {
+    public static void init() throws ResponseException {
         server = new Server();
         var port = server.run(0);
         serverFacade = new ServerFacade(port);
+        serverFacade.clear();
         System.out.println("Started test HTTP server on " + port);
     }
 
@@ -25,12 +26,12 @@ public class ServerFacadeTests {
         server.stop();
     }
 
-
     @Test
-    public void registerSuccess() throws ServerException {
+    public void registerSuccess() throws ResponseException {
         AuthData authData = serverFacade.register("username", "password", "me@mail.com");
         assertEquals("username", authData.username());
         assertNotNull(authData.authToken());
+
     }
 
 

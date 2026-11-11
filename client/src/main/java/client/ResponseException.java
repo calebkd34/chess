@@ -3,9 +3,9 @@ package client;
 /**
  * Indicates an invalid move was made in a game
  */
-public class ServerException extends Exception {
+public class ResponseException extends Exception {
 
-    public ServerException(String message) {
+    public ResponseException(String message) {
         super(message);
     }
 }
