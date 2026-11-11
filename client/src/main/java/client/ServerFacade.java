@@ -16,47 +16,60 @@ public class ServerFacade {
 
     private static final HttpClient httpClient = HttpClient.newHttpClient();
     private static final Gson serializer = new Gson();
+    private final int port;
 
-    public static AuthData register() throws ServerException {
+    public ServerFacade(int port) {
+        this.port = port;
+    }
+
+    public AuthData register(String username, String password, String email) throws ServerException {
 
         try {
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI("https://localhost:8080"))
+                    .uri(new URI("http://localhost:%s/user".formatted(port)))
                     .timeout(java.time.Duration.ofMillis(5000))
-                    .GET().build();
+                    .POST(HttpRequest.BodyPublishers.ofString(
+                            "{\"username\":\"%s\",\"password\":\"%s\",\"email\":\"%s\"}".formatted(username, password, email)
+                    ))
+                    .header("Content-Type", "application/json")
+                    .build();
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if (response.statusCode() == 200) {
+            if (response.statusCode() >= 200 && response.statusCode() < 300) {
                 return serializer.fromJson(response.body(), AuthData.class);
             } else {
-                throw new ServerException("Error: response not 200 OK");
+                throw new ServerException("Error: response not OK");
             }
-        } catch (URISyntaxException | InterruptedException | IOException e) {
-            throw new ServerException("Error: %s".formatted(e.getMessage()));
+        } catch (URISyntaxException e) {
+            throw new ServerException("Syntax Error: %s".formatted(e.toString()));
+        } catch (InterruptedException e) {
+            throw new ServerException("Interrupted Error: %s".formatted(e.toString()));
+        } catch (IOException e) {
+            throw new ServerException("IO Error: %s".formatted(e.toString()));
         }
     }
 
-    public static AuthData login() {
+    public AuthData login() {
         return null;
     }
 
-    public static void logout() {
+    public void logout() {
 
     }
 
-    public static void createGame() {
+    public void createGame() {
 
     }
 
-    public static Collection<GameData> listGames() {
+    public Collection<GameData> listGames() {
         return null;
     }
 
-    public static void joinGame() {
+    public void joinGame() {
 
     }
 
-    public static void clear() {
+    public void clear() {
 
     }
 }
