@@ -99,6 +99,16 @@ public class ServerFacadeTests {
 
     @Test
     public void createGameSuccess() throws ResponseException {
+        String authToken = serverFacade.register("username", "password", "email").authToken();
+        serverFacade.createGame(authToken, "Game 1");
+    }
+
+    @Test void createGameUnauthorized() throws ResponseException {
+        serverFacade.register("username", "password", "email");
+        assertThrows(
+                ResponseException.class,
+                () -> serverFacade.createGame("not authToken", "Game 1")
+        );
 
     }
 }
