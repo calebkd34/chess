@@ -97,4 +97,8 @@ public class ServerFacadeTests {
         );
     }
 
+    @Test
+    public void createGameSuccess() throws ResponseException {
+
+    }
 }

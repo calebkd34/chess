@@ -19,7 +19,7 @@ public class GameService extends Service {
      * Creates a new game with the given name.
      *
      * @param authToken proof the user is logged in
-     * @param request   contains the new game name
+     * @param request contains the new game name
      * @return JSON of new game ID
      * @throws UnauthorizedException when the authToken is wrong
      * @throws BadRequestException   when no name is given
