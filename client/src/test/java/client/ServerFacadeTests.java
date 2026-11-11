@@ -1,7 +1,10 @@
 package client;
 
 import model.AuthData;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import server.Server;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,16 +16,20 @@ public class ServerFacadeTests {
     private static ServerFacade serverFacade;
 
     @BeforeAll
-    public static void init() throws ResponseException {
+    public static void init() {
         server = new Server();
         var port = server.run(0);
         serverFacade = new ServerFacade(port);
-        serverFacade.clear();
         System.out.println("Started test HTTP server on " + port);
     }
 
+    @BeforeEach
+    public void setup() throws ResponseException {
+        serverFacade.clear();
+    }
+
     @AfterAll
-    static void stopServer() {
+    static void stopServer() throws ResponseException {
         server.stop();
     }
 
@@ -31,9 +38,44 @@ public class ServerFacadeTests {
         AuthData authData = serverFacade.register("username", "password", "me@mail.com");
         assertEquals("username", authData.username());
         assertNotNull(authData.authToken());
-
     }
 
+    @Test
+    public void registerAlreadyTaken() throws ResponseException {
+        serverFacade.register("username", "password", "me@email.com");
+        assertThrows(
+                ResponseException.class,
+                () -> serverFacade.register("username", "password", "me@email.com")
+        );
+    }
 
+    @Test
+    public void loginSuccess() throws ResponseException {
+        String authToken = serverFacade.register("username", "password", "email").authToken();
+        serverFacade.logout(authToken);
+        AuthData authData = serverFacade.login("username", "password");
+        assertEquals("username", authData.username());
+        assertNotNull(authData.authToken());
+    }
+
+    @Test
+    public void loginWrongUsername() throws ResponseException {
+
+        serverFacade.register("username", "password", "me@gmail.com");
+        assertThrows(
+                ResponseException.class,
+                () -> serverFacade.login("wrong", "password")
+        );
+    }
+
+    @Test
+    public void loginWrongPassword() throws ResponseException {
+        String authToken = serverFacade.register("username", "password", "email").authToken();
+        serverFacade.logout(authToken);
+        assertThrows(
+                client.ResponseException.class,
+                () -> serverFacade.login("username", "wrong")
+        );
+    }
 
 }
