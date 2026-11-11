@@ -29,7 +29,7 @@ public class ServerFacadeTests {
     }
 
     @AfterAll
-    static void stopServer() throws ResponseException {
+    static void stopServer() {
         server.stop();
     }
 
@@ -75,6 +75,25 @@ public class ServerFacadeTests {
         assertThrows(
                 client.ResponseException.class,
                 () -> serverFacade.login("username", "wrong")
+        );
+    }
+
+    @Test
+    public void logoutSuccess() throws ResponseException {
+        String authToken = serverFacade.register("username", "password", "email").authToken();
+        serverFacade.logout(authToken);
+        assertThrows(
+                ResponseException.class,
+                () -> serverFacade.logout(authToken)
+        );
+    }
+
+    @Test
+    public void logoutUnauthorized() throws ResponseException {
+        serverFacade.register("username", "password", "email");
+        assertThrows(
+                ResponseException.class,
+                () -> serverFacade.logout("probably not authToken")
         );
     }
 

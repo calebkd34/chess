@@ -60,7 +60,7 @@ public class ServerFacade {
             } else {
                 throw new ResponseException("[%s] is not OK: %s".formatted(response.statusCode(), response.body()));
             }
-        // exceptions
+            // exceptions
         } catch (URISyntaxException e) {
             throw new ResponseException("Syntax Error: %s".formatted(e.toString()));
         } catch (InterruptedException e) {
@@ -70,7 +70,7 @@ public class ServerFacade {
         }
     }
 
-    public AuthData login(String username, String password) throws ResponseException{
+    public AuthData login(String username, String password) throws ResponseException {
         try {
             // build request
             HttpRequest request = HttpRequest.newBuilder()
@@ -100,21 +100,20 @@ public class ServerFacade {
         }
     }
 
-    public void logout(String authToken) throws ResponseException{
+    public void logout(String authToken) throws ResponseException {
         try {
             // build request
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI("http://localhost:%s/session".formatted(port)))
                     .timeout(java.time.Duration.ofMillis(5000))
-                    .POST(HttpRequest.BodyPublishers.ofString(""))
+                    .DELETE()
                     .header("authorization", authToken)
                     .build();
 
             // send
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-            // build an AuthData instance from the response if possible
-            if (response.statusCode() < 200 && response.statusCode() >= 300) {
+            if (response.statusCode() < 200 || response.statusCode() >= 300) {
                 throw new ResponseException("[%s] is not OK: %s".formatted(response.statusCode(), response.body()));
             }
             // exceptions
