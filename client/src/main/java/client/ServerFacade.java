@@ -1,9 +1,9 @@
 package client;
 
-import client.POJOs.GameID;
 import com.google.gson.Gson;
 import model.AuthData;
-import model.GameData;
+import result.CreateGameResult;
+import result.ListGamesResult;
 
 import java.io.IOException;
 import java.net.URI;
@@ -11,6 +11,7 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Collection;
 
 public class ServerFacade {
 
@@ -145,7 +146,36 @@ public class ServerFacade {
 
             // build instance from the response if possible
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                return serializer.fromJson(response.body(), GameID.class).gameID();
+                return serializer.fromJson(response.body(), CreateGameResult.class).gameID();
+            } else {
+                throw new ResponseException("[%s] is not OK: %s".formatted(response.statusCode(), response.body()));
+            }
+            // exceptions
+        } catch (URISyntaxException e) {
+            throw new ResponseException("Syntax Error: %s".formatted(e.toString()));
+        } catch (InterruptedException e) {
+            throw new ResponseException("Interrupted Error: %s".formatted(e.toString()));
+        } catch (IOException e) {
+            throw new ResponseException("IO Error: %s".formatted(e.toString()));
+        }
+    }
+
+    public Collection<ListGamesResult.Game> listGames(String authToken) throws ResponseException {
+        try {
+            // build request
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(new URI("http://localhost:%s/game".formatted(port)))
+                    .timeout(java.time.Duration.ofMillis(5000))
+                    .GET()
+                    .header("authorization", authToken)
+                    .build();
+
+            // send
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            // build instance from the response if possible
+            if (response.statusCode() >= 200 && response.statusCode() < 300) {
+                return serializer.fromJson(response.body(), ListGamesResult.class).games();
             } else {
                 throw new ResponseException("[%s] is not OK: %s".formatted(response.statusCode(), response.body()));
             }
