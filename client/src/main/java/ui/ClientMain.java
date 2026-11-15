@@ -8,9 +8,9 @@ public class ClientMain {
         }
 
         try {
-            new PreLoginUI().run();
+            new Repl().run();
 
-        } catch (ResponseException e) {
+        } catch (Exception e) {
             System.out.printf("Unable to connect to server: %s%n", e.getMessage());
         }
 

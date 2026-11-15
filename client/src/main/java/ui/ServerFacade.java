@@ -61,7 +61,11 @@ public class ServerFacade {
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
                 return serializer.fromJson(response.body(), AuthData.class);
             } else {
-                throw new ResponseException("[%s] is not OK: %s".formatted(response.statusCode(), response.body()));
+                throw new ResponseException(switch (response.statusCode()) {
+                    case 400 -> "bad request";
+                    case 403 -> "already taken";
+                    default -> "an unknown error occurred";
+                });
             }
             // exceptions
         } catch (URISyntaxException e) {
@@ -91,7 +95,11 @@ public class ServerFacade {
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
                 return serializer.fromJson(response.body(), AuthData.class);
             } else {
-                throw new ResponseException("[%s] is not OK: %s".formatted(response.statusCode(), response.body()));
+                throw new ResponseException(switch (response.statusCode()) {
+                    case 400 -> "bad request";
+                    case 401 -> "unauthorized";
+                    default -> "an unknown error occurred";
+                });
             }
             // exceptions
         } catch (URISyntaxException e) {
@@ -117,7 +125,36 @@ public class ServerFacade {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() < 200 || response.statusCode() >= 300) {
-                throw new ResponseException("[%s] is not OK: %s".formatted(response.statusCode(), response.body()));
+                throw new ResponseException((response.statusCode() == 401) ? "unauthorized" : "an unknown error occurred");
+            }
+            // exceptions
+        } catch (URISyntaxException e) {
+            throw new ResponseException("Syntax Error: %s".formatted(e.toString()));
+        } catch (InterruptedException e) {
+            throw new ResponseException("Interrupted Error: %s".formatted(e.toString()));
+        } catch (IOException e) {
+            throw new ResponseException("IO Error: %s".formatted(e.toString()));
+        }
+    }
+
+    public Collection<ListGamesResult.Game> listGames(String authToken) throws ResponseException {
+        try {
+            // build request
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(new URI("http://localhost:%s/game".formatted(port)))
+                    .timeout(java.time.Duration.ofMillis(5000))
+                    .GET()
+                    .header("authorization", authToken)
+                    .build();
+
+            // send
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            // build instance from the response if possible
+            if (response.statusCode() >= 200 && response.statusCode() < 300) {
+                return serializer.fromJson(response.body(), ListGamesResult.class).games();
+            } else {
+                throw new ResponseException((response.statusCode() == 401) ? "unauthorized" : "an unknown error occurred");
             }
             // exceptions
         } catch (URISyntaxException e) {
@@ -148,7 +185,11 @@ public class ServerFacade {
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
                 return serializer.fromJson(response.body(), CreateGameResult.class).gameID();
             } else {
-                throw new ResponseException("[%s] is not OK: %s".formatted(response.statusCode(), response.body()));
+                throw new ResponseException(switch (response.statusCode()) {
+                    case 400 -> "bad request";
+                    case 401 -> "unauthorized";
+                    default -> "an unknown error occurred";
+                });
             }
             // exceptions
         } catch (URISyntaxException e) {
@@ -160,32 +201,5 @@ public class ServerFacade {
         }
     }
 
-    public Collection<ListGamesResult.Game> listGames(String authToken) throws ResponseException {
-        try {
-            // build request
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI("http://localhost:%s/game".formatted(port)))
-                    .timeout(java.time.Duration.ofMillis(5000))
-                    .GET()
-                    .header("authorization", authToken)
-                    .build();
-
-            // send
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-            // build instance from the response if possible
-            if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                return serializer.fromJson(response.body(), ListGamesResult.class).games();
-            } else {
-                throw new ResponseException("[%s] is not OK: %s".formatted(response.statusCode(), response.body()));
-            }
-            // exceptions
-        } catch (URISyntaxException e) {
-            throw new ResponseException("Syntax Error: %s".formatted(e.toString()));
-        } catch (InterruptedException e) {
-            throw new ResponseException("Interrupted Error: %s".formatted(e.toString()));
-        } catch (IOException e) {
-            throw new ResponseException("IO Error: %s".formatted(e.toString()));
-        }
-    }
+    public
 }
