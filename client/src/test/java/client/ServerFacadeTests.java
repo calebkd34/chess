@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import result.ListGamesResult;
 import server.Server;
+import ui.ResponseException;
+import ui.ServerFacade;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,7 +35,8 @@ public class ServerFacadeTests {
     }
 
     @AfterAll
-    static void stopServer() {
+    static void stopServer() throws ResponseException {
+        serverFacade.clear();
         server.stop();
     }
 
@@ -77,7 +80,7 @@ public class ServerFacadeTests {
         String authToken = serverFacade.register("username", "password", "email").authToken();
         serverFacade.logout(authToken);
         assertThrows(
-                client.ResponseException.class,
+                ResponseException.class,
                 () -> serverFacade.login("username", "wrong")
         );
     }

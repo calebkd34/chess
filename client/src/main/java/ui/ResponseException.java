@@ -1,4 +1,4 @@
-package client;
+package ui;
 
 /**
  * Indicates an invalid move was made in a game
