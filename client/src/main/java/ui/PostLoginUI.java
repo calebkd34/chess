@@ -45,6 +45,7 @@ public class PostLoginUI {
                 createGame();
                 return Repl.State.LOGGED_IN;
             } else if (input.equalsIgnoreCase("play game")) {
+                joinGame();
                 return Repl.State.LOGGED_IN;
             } else if (input.equalsIgnoreCase("observe game")) {
                 return Repl.State.LOGGED_IN;
@@ -54,11 +55,10 @@ public class PostLoginUI {
             }
 
         } catch (ResponseException e) {
-            System.out.printf("ErrorL %s\n", e.getMessage());
+            System.out.printf("Error: %s\n", e.getMessage());
         }
         return Repl.State.LOGGED_IN;
     }
-
 
     public void listGames() throws ResponseException {
         Collection<ListGamesResult.Game> games = server.listGames(authToken);
@@ -81,6 +81,26 @@ public class PostLoginUI {
         System.out.print("\tGame Name: ");
         String gameName = scanner.nextLine();
         server.createGame(authToken, gameName);
+    }
+
+    public void joinGame() throws ResponseException {
+        try {
+            System.out.print("\tGame Number: ");
+            int gameIndex = Integer.parseInt(scanner.nextLine());
+            System.out.print("\tJoin game as (BLACK/WHITE): ");
+            String playerColor = scanner.nextLine();
+            if (playerColor.equalsIgnoreCase("black")) {
+                server.joinGame(authToken, gameIDs.get(gameIndex), "BLACK");
+                System.out.print("Joined game as black\n");
+            } else if (playerColor.equalsIgnoreCase("white")) {
+                server.joinGame(authToken, gameIDs.get(gameIndex), "WHITE");
+                System.out.print("Joined game as white\n");
+            } else {
+                System.out.print("\t%s is not a valid option\n");
+            }
+        } catch (NumberFormatException e) {
+            System.out.print("\t%s is not a valid game number\n");
+        }
     }
 
     public void setAuthToken(String token) {

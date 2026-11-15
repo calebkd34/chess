@@ -217,7 +217,6 @@ public class ServerFacade {
             // send
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-            System.out.println(response.statusCode());
             // build instance from the response if possible
             if (response.statusCode() < 200 || response.statusCode() >= 300) {
                 throw new ResponseException(switch (response.statusCode()) {
