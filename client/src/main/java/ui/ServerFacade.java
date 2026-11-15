@@ -3,7 +3,6 @@ package ui;
 import com.google.gson.Gson;
 import model.AuthData;
 import result.CreateGameResult;
-import result.JoinGameResult;
 import result.ListGamesResult;
 
 import java.io.IOException;

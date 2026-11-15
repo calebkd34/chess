@@ -136,7 +136,6 @@ public class GameService extends Service {
             blackUsername = authData.username();
         }
 
-        GameData updatedGame = new GameData(game.gameID(), whiteUsername, blackUsername, game.gameName(), game.game());
-        return updatedGame;
+        return new GameData(game.gameID(), whiteUsername, blackUsername, game.gameName(), game.game());
     }
 }

@@ -171,7 +171,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void joinGameUnauthorized() throws ResponseException {
+    public void joinGameUnauthorized() {
         assertThrows(ResponseException.class, () -> serverFacade.joinGame("sup", 1, "BLACK"));
     }
 
