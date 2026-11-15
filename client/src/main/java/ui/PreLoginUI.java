@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 public class PreLoginUI {
 
+    private String authToken;
     private final ServerFacade server;
     private final Scanner scanner;
 
@@ -15,7 +16,7 @@ public class PreLoginUI {
     public Repl.State eval(String input) {
 
         try {
-            if (input.equals("help")) {
+            if (input.equalsIgnoreCase("help")) {
                 System.out.print("""
                         \tregister <USERNAME> <PASSWORD> <EMAIL> to register a new user
                         \tlogin <USERNAME> <PASSWORD> to log in an existing user
@@ -23,18 +24,16 @@ public class PreLoginUI {
                         \thelp - show this menu
                         """);
                 return Repl.State.LOGGED_OUT;
-            }
-            if (input.equalsIgnoreCase("quit")) {
+            } else if (input.equalsIgnoreCase("quit")) {
                 return Repl.State.QUIT;
-            }
-            if (input.equalsIgnoreCase("register")) {
+            } else if (input.equalsIgnoreCase("register")) {
                 register();
                 return Repl.State.LOGGED_IN;
             } else if (input.equalsIgnoreCase("login")) {
                 login();
                 return Repl.State.LOGGED_IN;
             } else {
-                System.out.print("Invalid Command. Type `help` for how to use the commands.\n");
+                System.out.print("Invalid command. Type `help` for how to use the commands.\n");
                 return Repl.State.LOGGED_OUT;
             }
         } catch (ResponseException e) {
@@ -52,8 +51,8 @@ public class PreLoginUI {
         System.out.print("\temail: ");
         String email = scanner.nextLine();
 
-        server.register(username, password, email);
-        System.out.printf("Registered as %s\n",username);
+        authToken = server.register(username, password, email).authToken();
+        System.out.printf("Registered as %s\n", username);
     }
 
     private void login() throws ResponseException {
@@ -63,8 +62,9 @@ public class PreLoginUI {
         System.out.print("\tpassword: ");
         String password = scanner.nextLine();
 
-        server.login(username, password);
-        System.out.printf("Logged in as %s\n",username);
+        authToken = server.login(username, password).authToken();
+        System.out.printf("Logged in as %s\n", username);
     }
 
+    public String getAuthToken() {return authToken;}
 }

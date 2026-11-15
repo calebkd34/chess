@@ -30,6 +30,11 @@ public class Repl {
             if (state.equals(State.LOGGED_OUT)) {
                 System.out.print("[LOGGED_OUT] >>> ");
                 state = preLogin.eval(scanner.nextLine());
+
+                // if they have now logged in, pass the authToken over
+                if (state.equals(State.LOGGED_IN)) {
+                    postLogin.setAuthToken(preLogin.getAuthToken());
+                }
             } else {
                 System.out.print("[LOGGED_IN] >>> ");
                 state = postLogin.eval(scanner.nextLine());
