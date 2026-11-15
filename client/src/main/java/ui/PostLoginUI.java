@@ -11,7 +11,7 @@ public class PostLoginUI {
 
     private final ServerFacade server;
     private final Scanner scanner;
-    private Map<Integer, Integer> gameIDs;
+    private final Map<Integer, Integer> gameIDs;
     private String authToken;
 
     public PostLoginUI(ServerFacade server, Scanner scanner) {

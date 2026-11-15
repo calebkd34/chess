@@ -4,6 +4,7 @@ import chess.ChessGame;
 import dataaccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
+import org.jetbrains.annotations.NotNull;
 import request.CreateGameRequest;
 import request.JoinGameRequest;
 import result.CreateGameResult;
@@ -19,7 +20,7 @@ public class GameService extends Service {
      * Creates a new game with the given name.
      *
      * @param authToken proof the user is logged in
-     * @param request contains the new game name
+     * @param request   contains the new game name
      * @return JSON of new game ID
      * @throws UnauthorizedException when the authToken is wrong
      * @throws BadRequestException   when no name is given
@@ -105,25 +106,37 @@ public class GameService extends Service {
         }
 
         // the spot you want is taken
+        GameData updatedGame = getUpdatedGame(request, game, authData);
+        gameDao.updateGame(updatedGame);
+        return new JoinGameResult();
+    }
+
+    @NotNull
+    private static GameData getUpdatedGame(JoinGameRequest request, GameData game, AuthData authData) throws AlreadyTakenException {
         if (game.whiteUsername() != null && request.playerColor().equals("WHITE") ||
                 game.blackUsername() != null && request.playerColor().equals("BLACK")
         ) {
             throw new AlreadyTakenException("Error: already taken");
         }
 
-        // edit the game to have your username
+        // edit the game to have your username, only allow if you are not already in it
         String whiteUsername;
         String blackUsername;
         if (request.playerColor().equals("WHITE")) {
+            if (game.blackUsername() != null && game.blackUsername().equals(authData.username())) {
+                throw new AlreadyTakenException("Error: Already joined as black");
+            }
             whiteUsername = authData.username();
             blackUsername = game.blackUsername();
         } else {
+            if (game.whiteUsername() != null && game.whiteUsername().equals(authData.username())) {
+                throw new AlreadyTakenException("Error: Already joined as white");
+            }
             whiteUsername = game.whiteUsername();
             blackUsername = authData.username();
         }
-        
+
         GameData updatedGame = new GameData(game.gameID(), whiteUsername, blackUsername, game.gameName(), game.game());
-        gameDao.updateGame(updatedGame);
-        return new JoinGameResult();
+        return updatedGame;
     }
 }
