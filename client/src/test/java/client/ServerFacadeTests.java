@@ -105,21 +105,6 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void createGameSuccess() throws ResponseException {
-        String authToken = serverFacade.register("username", "password", "email").authToken();
-        assertEquals(1, serverFacade.createGame(authToken, "Game 1"));
-    }
-
-    @Test
-    public void createGameUnauthorized() throws ResponseException {
-        serverFacade.register("username", "password", "email");
-        assertThrows(
-                ResponseException.class,
-                () -> serverFacade.createGame("not authToken", "Game 1")
-        );
-    }
-
-    @Test
     public void listGamesNoPlayers() throws ResponseException {
         String authToken = serverFacade.register("username", "password", "email").authToken();
         serverFacade.createGame(authToken, "Game 1");
@@ -147,4 +132,47 @@ public class ServerFacadeTests {
                 () -> serverFacade.listGames("not authToken")
         );
     }
+
+    @Test
+    public void createGameSuccess() throws ResponseException {
+        String authToken = serverFacade.register("username", "password", "email").authToken();
+        assertEquals(1, serverFacade.createGame(authToken, "Game 1"));
+    }
+
+    @Test
+    public void createGameUnauthorized() throws ResponseException {
+        serverFacade.register("username", "password", "email");
+        assertThrows(
+                ResponseException.class,
+                () -> serverFacade.createGame("not authToken", "Game 1")
+        );
+    }
+
+    @Test
+    public void joinGameSuccess() throws ResponseException {
+        String authToken = serverFacade.register("username", "password", "email").authToken();
+        serverFacade.createGame(authToken, "Game 1");
+        serverFacade.joinGame(authToken, 1, "BLACK");
+        serverFacade.joinGame(authToken, 1, "WHITE");
+    }
+
+    @Test
+    public void joinGameOccupied() throws ResponseException {
+        String authToken = serverFacade.register("username", "password", "email").authToken();
+        serverFacade.createGame(authToken, "Game 1");
+        serverFacade.joinGame(authToken, 1, "BLACK");
+        assertThrows(ResponseException.class, () -> serverFacade.joinGame(authToken, 1, "BLACK"));
+    }
+
+    @Test
+    public void joinGameNoGame() throws ResponseException {
+        String authToken = serverFacade.register("username", "password", "email").authToken();
+        assertThrows(ResponseException.class, () -> serverFacade.joinGame(authToken, 1, "BLACK"));
+    }
+
+    @Test
+    public void joinGameUnauthorized() throws ResponseException {
+        assertThrows(ResponseException.class, () -> serverFacade.joinGame("sup", 1, "BLACK"));
+    }
+
 }

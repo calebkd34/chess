@@ -3,6 +3,7 @@ package ui;
 import com.google.gson.Gson;
 import model.AuthData;
 import result.CreateGameResult;
+import result.JoinGameResult;
 import result.ListGamesResult;
 
 import java.io.IOException;
@@ -201,5 +202,38 @@ public class ServerFacade {
         }
     }
 
-    public
+    public void joinGame(String authToken, Integer gameID, String playerColor) throws ResponseException {
+        try {
+            // build request
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(new URI("http://localhost:%s/game".formatted(port)))
+                    .timeout(java.time.Duration.ofMillis(5000))
+                    .PUT(HttpRequest.BodyPublishers.ofString(
+                            "{\"gameID\":\"%s\",\"playerColor\":\"%s\"}".formatted(gameID, playerColor)
+                    ))
+                    .header("authorization", authToken)
+                    .build();
+
+            // send
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            System.out.println(response.statusCode());
+            // build instance from the response if possible
+            if (response.statusCode() < 200 || response.statusCode() >= 300) {
+                throw new ResponseException(switch (response.statusCode()) {
+                    case 400 -> "bad request";
+                    case 401 -> "unauthorized";
+                    case 403 -> "already taken";
+                    default -> "an unknown error occurred";
+                });
+            }
+            // exceptions
+        } catch (URISyntaxException e) {
+            throw new ResponseException("Syntax Error: %s".formatted(e.toString()));
+        } catch (InterruptedException e) {
+            throw new ResponseException("Interrupted Error: %s".formatted(e.toString()));
+        } catch (IOException e) {
+            throw new ResponseException("IO Error: %s".formatted(e.toString()));
+        }
+    }
 }
