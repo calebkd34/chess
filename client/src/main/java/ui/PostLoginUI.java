@@ -1,16 +1,23 @@
 package ui;
 
+import result.ListGamesResult;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class PostLoginUI {
 
     private final ServerFacade server;
     private final Scanner scanner;
+    private Map<Integer, Integer> gameIDs;
     private String authToken;
 
     public PostLoginUI(ServerFacade server, Scanner scanner) {
         this.server = server;
         this.scanner = scanner;
+        gameIDs = new HashMap<>();
     }
 
     public Repl.State eval(String input) {
@@ -54,11 +61,26 @@ public class PostLoginUI {
 
 
     public void listGames() throws ResponseException {
-
+        Collection<ListGamesResult.Game> games = server.listGames(authToken);
+        gameIDs.clear();
+        int i = 1;
+        System.out.print(" # | Game Name | Black Player | White Player |\n");
+        for (ListGamesResult.Game game : games) {
+            gameIDs.put(i++, game.gameID());
+            System.out.printf(
+                    "%s | %s | %s | %s |\n",
+                    game.gameID(),
+                    game.gameName(),
+                    game.blackUsername(),
+                    game.whiteUsername()
+            );
+        }
     }
 
     public void createGame() throws ResponseException {
-
+        System.out.print("\tGame Name: ");
+        String gameName = scanner.nextLine();
+        server.createGame(authToken, gameName);
     }
 
     public void setAuthToken(String token) {
