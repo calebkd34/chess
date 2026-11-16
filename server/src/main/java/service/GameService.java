@@ -106,14 +106,8 @@ public class GameService extends Service {
 
         // check if player can join the game
         if (
-                game.whiteUsername() != null && (
-                        request.playerColor().equals("WHITE") || // white is already taken
-                                authData.username().equals(game.whiteUsername()) // already joined as white
-                ) ||
-                        game.blackUsername() != null && (
-                                request.playerColor().equals("BLACK") || // black is already taken
-                                        authData.username().equals(game.blackUsername()) // already joined as black
-                        )
+                (game.whiteUsername() != null && request.playerColor().equals("WHITE")) ||
+                        (game.blackUsername() != null && request.playerColor().equals("BLACK"))
 
         ) {
             throw new AlreadyTakenException("Error: already taken");

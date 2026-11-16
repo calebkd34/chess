@@ -153,7 +153,6 @@ public class ServerFacadeTests {
         String authToken = serverFacade.register("username", "password", "email").authToken();
         serverFacade.createGame(authToken, "Game 1");
         serverFacade.joinGame(authToken, 1, "BLACK");
-        serverFacade.joinGame(authToken, 1, "WHITE");
     }
 
     @Test
