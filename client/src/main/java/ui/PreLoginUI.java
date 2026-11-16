@@ -18,10 +18,10 @@ public class PreLoginUI {
         try {
             if (input.equalsIgnoreCase("help")) {
                 System.out.printf("""
-                                \t%s register %s- to register a new user
-                                \t%s login %s- to log in an existing user
-                                \t%s quit %s- end program
-                                \t%s help %s- show this menu
+                                \t%sregister %s- to register a new user
+                                \t%slogin %s- to log in an existing user
+                                \t%squit %s- end program
+                                \t%shelp %s- show this menu
                                 """,
                         EscapeSequences.SET_TEXT_COLOR_BLUE,
                         EscapeSequences.RESET_TEXT_COLOR,
