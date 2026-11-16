@@ -51,7 +51,9 @@ public class PostLoginUI {
                 return Repl.State.LOGGED_IN;
             } else if (input.equalsIgnoreCase("quit")) {
                 return Repl.State.QUIT;
-            } else if (input.equalsIgnoreCase("logout")) {
+            }
+            // log out
+            else if (input.equalsIgnoreCase("logout")) {
                 server.logout(authToken);
                 System.out.printf(
                         "%s%sLogged out successfully%s",
@@ -70,6 +72,7 @@ public class PostLoginUI {
                 joinGame();
                 return Repl.State.LOGGED_IN;
             } else if (input.equalsIgnoreCase("observe game")) {
+                observeGame();
                 return Repl.State.LOGGED_IN;
             } else {
                 System.out.printf(
@@ -156,15 +159,21 @@ public class PostLoginUI {
 
     public void joinGame() throws ResponseException {
         try {
+            // prompts
             System.out.print("\tGame Number: ");
             int gameIndex = Integer.parseInt(scanner.nextLine());
             System.out.print("\tJoin game as <BLACK/WHITE>: ");
             String playerColor = scanner.nextLine();
+
+            // join game as black
             if (playerColor.equalsIgnoreCase("black")) {
                 server.joinGame(authToken, gameIDs.get(gameIndex), "BLACK");
                 System.out.print("Joined game as black\n");
                 GameUI.blackPerspective(new ChessGame());
-            } else if (playerColor.equalsIgnoreCase("white")) {
+
+            }
+            // join game as white
+            else if (playerColor.equalsIgnoreCase("white")) {
                 server.joinGame(authToken, gameIDs.get(gameIndex), "WHITE");
                 System.out.print("Joined game as white\n");
                 GameUI.whitePerspective(new ChessGame());
@@ -182,8 +191,13 @@ public class PostLoginUI {
 
     public void observeGame() {
         try {
-           System.out.print("\tGame Number");
-           int gameIndex = Integer.parseInt(scanner.nextLine());
+            // prompts
+            System.out.print("\tGame Number: ");
+            int gameIndex = Integer.parseInt(scanner.nextLine());
+
+            // just for now, use blank board
+            GameUI.whitePerspective(new ChessGame());
+
         } catch (NumberFormatException e) {
             System.out.printf(
                     "\t%sThat is not a valid game number%s\n",

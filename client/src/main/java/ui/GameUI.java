@@ -22,9 +22,12 @@ public class GameUI {
     public Repl.State eval(Color color) {
         try {
             String input = scanner.nextLine();
+            // help
             if (input.equalsIgnoreCase("help")) {
                 System.out.print("Help menu not implemented\n");
-            } else if (input.equalsIgnoreCase("quit")) {
+            }
+            // quit
+            else if (input.equalsIgnoreCase("quit")) {
                 return Repl.State.QUIT;
             } else {
                 System.out.print("\t%s is not a valid option\n");
@@ -74,6 +77,7 @@ public class GameUI {
                 );
                 darkSquare = !darkSquare;
             }
+            darkSquare = !darkSquare;
             System.out.printf(" %s \n", i);
         }
         System.out.print(" a  b  c  d  e  f  g  h \n");
@@ -100,9 +104,9 @@ public class GameUI {
 
     private static void printSquare(Color color, ChessPiece piece) {
         System.out.printf(
-                "%s %s %s",
+                "%s%s%s",
                 (color == Color.BLACK) ? EscapeSequences.SET_BG_COLOR_BLACK : EscapeSequences.SET_BG_COLOR_WHITE,
-                pieces.get(piece.getPieceType().toString()),
+                (piece != null) ? pieces.get(piece.toString()) : "   ",
                 EscapeSequences.RESET_BG_COLOR
         );
     }
