@@ -15,8 +15,8 @@ import java.util.Collection;
 
 public class ServerFacade {
 
-    private static final HttpClient httpClient = HttpClient.newHttpClient();
-    private static final Gson serializer = new Gson();
+    private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+    private static final Gson SERIALIZER = new Gson();
     private final int port;
 
     public ServerFacade(int port) {
@@ -33,7 +33,7 @@ public class ServerFacade {
                     .build();
 
             // send
-            httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
 
             // exceptions
         } catch (Exception e) {
@@ -55,11 +55,11 @@ public class ServerFacade {
                     .build();
 
             // send
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
 
             // build an AuthData instance from the response if possible
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                return serializer.fromJson(response.body(), AuthData.class);
+                return SERIALIZER.fromJson(response.body(), AuthData.class);
             } else {
                 throw new ResponseException(switch (response.statusCode()) {
                     case 400 -> "bad request";
@@ -68,12 +68,8 @@ public class ServerFacade {
                 });
             }
             // exceptions
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | ResponseException | IOException | InterruptedException e) {
             throw new ResponseException("Syntax Error: %s".formatted(e.toString()));
-        } catch (InterruptedException e) {
-            throw new ResponseException("Interrupted Error: %s".formatted(e.toString()));
-        } catch (IOException e) {
-            throw new ResponseException("IO Error: %s".formatted(e.toString()));
         }
     }
 
@@ -89,25 +85,21 @@ public class ServerFacade {
                     .build();
 
             // send
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
 
             // build an AuthData instance from the response if possible
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                return serializer.fromJson(response.body(), AuthData.class);
+                return SERIALIZER.fromJson(response.body(), AuthData.class);
             } else {
                 throw new ResponseException(switch (response.statusCode()) {
                     case 400 -> "bad request";
-                    case 401 -> "unauthorized";
+                    case 401 -> "incorrect email or password";
                     default -> "an unknown error occurred";
                 });
             }
             // exceptions
-        } catch (URISyntaxException e) {
-            throw new ResponseException("Syntax Error: %s".formatted(e.toString()));
-        } catch (InterruptedException e) {
-            throw new ResponseException("Interrupted Error: %s".formatted(e.toString()));
-        } catch (IOException e) {
-            throw new ResponseException("IO Error: %s".formatted(e.toString()));
+        } catch (URISyntaxException | ResponseException | IOException | InterruptedException e) {
+            throw new ResponseException("Error: %s".formatted(e.toString()));
         }
     }
 
@@ -122,18 +114,14 @@ public class ServerFacade {
                     .build();
 
             // send
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() < 200 || response.statusCode() >= 300) {
                 throw new ResponseException((response.statusCode() == 401) ? "unauthorized" : "an unknown error occurred");
             }
             // exceptions
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | ResponseException | IOException | InterruptedException e) {
             throw new ResponseException("Syntax Error: %s".formatted(e.toString()));
-        } catch (InterruptedException e) {
-            throw new ResponseException("Interrupted Error: %s".formatted(e.toString()));
-        } catch (IOException e) {
-            throw new ResponseException("IO Error: %s".formatted(e.toString()));
         }
     }
 
@@ -148,21 +136,17 @@ public class ServerFacade {
                     .build();
 
             // send
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
 
             // build instance from the response if possible
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                return serializer.fromJson(response.body(), ListGamesResult.class).games();
+                return SERIALIZER.fromJson(response.body(), ListGamesResult.class).games();
             } else {
                 throw new ResponseException((response.statusCode() == 401) ? "unauthorized" : "an unknown error occurred");
             }
             // exceptions
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | ResponseException | IOException | InterruptedException e) {
             throw new ResponseException("Syntax Error: %s".formatted(e.toString()));
-        } catch (InterruptedException e) {
-            throw new ResponseException("Interrupted Error: %s".formatted(e.toString()));
-        } catch (IOException e) {
-            throw new ResponseException("IO Error: %s".formatted(e.toString()));
         }
     }
 
@@ -179,11 +163,11 @@ public class ServerFacade {
                     .build();
 
             // send
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
 
             // build instance from the response if possible
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                return serializer.fromJson(response.body(), CreateGameResult.class).gameID();
+                return SERIALIZER.fromJson(response.body(), CreateGameResult.class).gameID();
             } else {
                 throw new ResponseException(switch (response.statusCode()) {
                     case 400 -> "bad request";
@@ -192,12 +176,8 @@ public class ServerFacade {
                 });
             }
             // exceptions
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | ResponseException | IOException | InterruptedException e) {
             throw new ResponseException("Syntax Error: %s".formatted(e.toString()));
-        } catch (InterruptedException e) {
-            throw new ResponseException("Interrupted Error: %s".formatted(e.toString()));
-        } catch (IOException e) {
-            throw new ResponseException("IO Error: %s".formatted(e.toString()));
         }
     }
 
@@ -214,24 +194,20 @@ public class ServerFacade {
                     .build();
 
             // send
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
 
             // build instance from the response if possible
             if (response.statusCode() < 200 || response.statusCode() >= 300) {
                 throw new ResponseException(switch (response.statusCode()) {
                     case 400 -> "bad request";
                     case 401 -> "unauthorized";
-                    case 403 -> "already taken";
+                    case 403 -> "spot already taken";
                     default -> "an unknown error occurred";
                 });
             }
             // exceptions
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | ResponseException | IOException | InterruptedException e) {
             throw new ResponseException("Syntax Error: %s".formatted(e.toString()));
-        } catch (InterruptedException e) {
-            throw new ResponseException("Interrupted Error: %s".formatted(e.toString()));
-        } catch (IOException e) {
-            throw new ResponseException("IO Error: %s".formatted(e.toString()));
         }
     }
 }
