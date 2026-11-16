@@ -17,12 +17,20 @@ public class PreLoginUI {
 
         try {
             if (input.equalsIgnoreCase("help")) {
-                System.out.print("""
-                        \tregister <USERNAME> <PASSWORD> <EMAIL> to register a new user
-                        \tlogin <USERNAME> <PASSWORD> to log in an existing user
-                        \tquit - end program
-                        \thelp - show this menu
-                        """);
+                System.out.printf("""
+                                \t%s register %s- to register a new user
+                                \t%s login %s- to log in an existing user
+                                \t%s quit %s- end program
+                                \t%s help %s- show this menu
+                                """,
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                        EscapeSequences.RESET_TEXT_COLOR,
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                        EscapeSequences.RESET_TEXT_COLOR,
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                        EscapeSequences.RESET_TEXT_COLOR,
+                        EscapeSequences.SET_TEXT_COLOR_BLUE,
+                        EscapeSequences.RESET_TEXT_COLOR);
                 return Repl.State.LOGGED_OUT;
             } else if (input.equalsIgnoreCase("quit")) {
                 return Repl.State.QUIT;
@@ -33,11 +41,20 @@ public class PreLoginUI {
                 login();
                 return Repl.State.LOGGED_IN;
             } else {
-                System.out.print("Invalid command. Type `help` for how to use the commands.\n");
+                System.out.printf(
+                        "%sInvalid command. Type `help` for how to use the commands.%s\n",
+                        EscapeSequences.SET_TEXT_COLOR_RED,
+                        EscapeSequences.RESET_TEXT_COLOR
+                );
                 return Repl.State.LOGGED_OUT;
             }
         } catch (ResponseException e) {
-            System.out.printf("Error: %s\n", e.getMessage());
+            System.out.printf(
+                    "%sError: %s%s\n",
+                    EscapeSequences.SET_TEXT_COLOR_RED,
+                    e.getMessage(),
+                    EscapeSequences.RESET_TEXT_COLOR
+            );
             return Repl.State.LOGGED_OUT;
         }
     }
@@ -63,8 +80,15 @@ public class PreLoginUI {
         String password = scanner.nextLine();
 
         authToken = server.login(username, password).authToken();
-        System.out.printf("Logged in as %s\n", username);
+        System.out.printf(
+                "%sLogged in as %s%s\n",
+                EscapeSequences.SET_TEXT_ITALIC,
+                username,
+                EscapeSequences.RESET_TEXT_ITALIC
+        );
     }
 
-    public String getAuthToken() {return authToken;}
+    public String getAuthToken() {
+        return authToken;
+    }
 }
