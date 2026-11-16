@@ -112,7 +112,8 @@ public class GameService extends Service {
     }
 
     @NotNull
-    private static GameData getUpdatedGame(JoinGameRequest request, GameData game, AuthData authData) throws AlreadyTakenException {
+    private static GameData getUpdatedGame(JoinGameRequest request, GameData game, AuthData authData)
+            throws AlreadyTakenException {
         if (game.whiteUsername() != null && request.playerColor().equals("WHITE") ||
                 game.blackUsername() != null && request.playerColor().equals("BLACK")
         ) {

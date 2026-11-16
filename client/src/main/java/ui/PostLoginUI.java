@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessGame;
 import result.ListGamesResult;
 
 import java.util.Collection;
@@ -53,7 +54,8 @@ public class PostLoginUI {
             } else if (input.equalsIgnoreCase("logout")) {
                 server.logout(authToken);
                 System.out.printf(
-                        "%sLogged out successfully%s",
+                        "%s%sLogged out successfully%s",
+                        EscapeSequences.ERASE_SCREEN,
                         EscapeSequences.SET_TEXT_ITALIC,
                         EscapeSequences.RESET_TEXT_ITALIC
                 );
@@ -161,12 +163,27 @@ public class PostLoginUI {
             if (playerColor.equalsIgnoreCase("black")) {
                 server.joinGame(authToken, gameIDs.get(gameIndex), "BLACK");
                 System.out.print("Joined game as black\n");
+                GameUI.blackPerspective(new ChessGame());
             } else if (playerColor.equalsIgnoreCase("white")) {
                 server.joinGame(authToken, gameIDs.get(gameIndex), "WHITE");
                 System.out.print("Joined game as white\n");
+                GameUI.whitePerspective(new ChessGame());
             } else {
                 System.out.print("\t%s is not a valid option\n");
             }
+        } catch (NumberFormatException e) {
+            System.out.printf(
+                    "\t%sThat is not a valid game number%s\n",
+                    EscapeSequences.SET_TEXT_COLOR_RED,
+                    EscapeSequences.RESET_TEXT_COLOR
+            );
+        }
+    }
+
+    public void observeGame() {
+        try {
+           System.out.print("\tGame Number");
+           int gameIndex = Integer.parseInt(scanner.nextLine());
         } catch (NumberFormatException e) {
             System.out.printf(
                     "\t%sThat is not a valid game number%s\n",
