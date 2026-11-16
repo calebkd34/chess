@@ -6,56 +6,22 @@ import chess.ChessPiece;
 import chess.ChessPosition;
 
 import java.util.Map;
-import java.util.Scanner;
 
 public class GameUI {
 
-    private final ServerFacade server;
-    private final Scanner scanner;
-    private String authToken;
-
-    public GameUI(ServerFacade server, Scanner scanner) {
-        this.server = server;
-        this.scanner = scanner;
-    }
-
-    public Repl.State eval(Color color) {
-        try {
-            String input = scanner.nextLine();
-            // help
-            if (input.equalsIgnoreCase("help")) {
-                System.out.print("Help menu not implemented\n");
-            }
-            // quit
-            else if (input.equalsIgnoreCase("quit")) {
-                return Repl.State.QUIT;
-            } else {
-                System.out.print("\t%s is not a valid option\n");
-            }
-        } catch (Exception e) {
-            System.out.printf(
-                    "%sError: %s%s\n",
-                    EscapeSequences.SET_TEXT_COLOR_RED,
-                    e.getMessage(),
-                    EscapeSequences.RESET_TEXT_COLOR
-            );
-        }
-        return (color == Color.BLACK) ? Repl.State.PLAYING_BLACK : Repl.State.PLAYING_WHITE;
-    }
-
     public static final Map<String, String> pieces = Map.ofEntries(
-            Map.entry("B", EscapeSequences.WHITE_BISHOP),
-            Map.entry("b", EscapeSequences.BLACK_BISHOP),
-            Map.entry("K", EscapeSequences.WHITE_KING),
-            Map.entry("k", EscapeSequences.BLACK_KING),
-            Map.entry("N", EscapeSequences.WHITE_KNIGHT),
-            Map.entry("n", EscapeSequences.BLACK_KNIGHT),
-            Map.entry("P", EscapeSequences.WHITE_PAWN),
-            Map.entry("p", EscapeSequences.BLACK_PAWN),
-            Map.entry("Q", EscapeSequences.WHITE_QUEEN),
-            Map.entry("q", EscapeSequences.BLACK_QUEEN),
-            Map.entry("R", EscapeSequences.WHITE_ROOK),
-            Map.entry("r", EscapeSequences.BLACK_ROOK)
+            Map.entry("B", "B"),
+            Map.entry("b", "B"),
+            Map.entry("K", "K"),
+            Map.entry("k", "K"),
+            Map.entry("N", "N"),
+            Map.entry("n", "N"),
+            Map.entry("P", "P"),
+            Map.entry("p", "P"),
+            Map.entry("Q", "Q"),
+            Map.entry("q", "Q"),
+            Map.entry("R", "R"),
+            Map.entry("r", "R")
     );
 
     public enum Color {
@@ -67,7 +33,7 @@ public class GameUI {
         ChessBoard board = game.getBoard();
         boolean darkSquare = false;
 
-        System.out.print("    a  b  c  d  e  f  g  h \n");
+        System.out.print("    a  b  c  d  e  f  g  h\n");
         for (int i = 8; i > 0; i--) {
             System.out.printf(" %s ", i);
             for (int j = 1; j <= 8; j++) {
@@ -80,14 +46,14 @@ public class GameUI {
             darkSquare = !darkSquare;
             System.out.printf(" %s \n", i);
         }
-        System.out.print(" a  b  c  d  e  f  g  h \n");
+        System.out.print("    a  b  c  d  e  f  g  h\n");
     }
 
     public static void blackPerspective(ChessGame game) {
         ChessBoard board = game.getBoard();
         boolean darkSquare = false;
 
-        System.out.print("    h  g  f  e  d  c  b  a \n");
+        System.out.print("    h  g  f  e  d  c  a\n");
         for (int i = 1; i <= 8; i++) {
             System.out.printf(" %s ", i);
             for (int j = 1; j <= 8; j++) {
@@ -97,16 +63,20 @@ public class GameUI {
                 );
                 darkSquare = !darkSquare;
             }
+            darkSquare = !darkSquare;
             System.out.printf(" %s \n", i);
         }
-        System.out.print(" h  g  f  e  d  c  b  a \n");
+        System.out.print("    h  g  f  e  d  c  a\n");
     }
 
     private static void printSquare(Color color, ChessPiece piece) {
         System.out.printf(
-                "%s%s%s",
+                "%s%s %s %s%s",
+                (piece != null && piece.getTeamColor() == ChessGame.TeamColor.BLACK)
+                        ? EscapeSequences.SET_TEXT_COLOR_RED : EscapeSequences.SET_BG_COLOR_YELLOW,
                 (color == Color.BLACK) ? EscapeSequences.SET_BG_COLOR_BLACK : EscapeSequences.SET_BG_COLOR_WHITE,
-                (piece != null) ? pieces.get(piece.toString()) : "   ",
+                (piece != null) ? pieces.get(piece.toString()) : " ",
+                EscapeSequences.RESET_TEXT_COLOR,
                 EscapeSequences.RESET_BG_COLOR
         );
     }

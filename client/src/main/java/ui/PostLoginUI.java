@@ -61,7 +61,7 @@ public class PostLoginUI {
                         EscapeSequences.SET_TEXT_ITALIC,
                         EscapeSequences.RESET_TEXT_ITALIC
                 );
-                return Repl.State.LOGGED_OUT;
+                return Repl.State.LOGGED_IN;
             } else if (input.equalsIgnoreCase("list games")) {
                 listGames();
                 return Repl.State.LOGGED_IN;
@@ -193,7 +193,7 @@ public class PostLoginUI {
         try {
             // prompts
             System.out.print("\tGame Number: ");
-            int gameIndex = Integer.parseInt(scanner.nextLine());
+            Integer.parseInt(scanner.nextLine());
 
             // just for now, use blank board
             GameUI.whitePerspective(new ChessGame());
